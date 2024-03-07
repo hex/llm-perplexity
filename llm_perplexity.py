@@ -45,7 +45,7 @@ class Perplexity(llm.Model):
         messages.append({"role": "user", "content": prompt.prompt})
         return messages
 
-    def execute(self, prompt, stream, response, conversation):
+    def execute(self, prompt, stream, conversation):
         client = OpenAI(api_key=self.get_key(), base_url="https://api.perplexity.ai")
 
         kwargs = {
@@ -58,7 +58,6 @@ class Perplexity(llm.Model):
         if prompt.system:
             kwargs["system"] = prompt.system
 
-        usage = None
         if stream:
             with client.chat.completions.create(**kwargs) as stream:
                 for text in stream:
