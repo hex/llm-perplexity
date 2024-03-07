@@ -1,0 +1,23 @@
+[project]
+name = "llm-perplexity"
+version = "0.1"
+description = "LLM access to pplx-api 3 by Perplexity Labs"
+readme = "README.md"
+authors = [{name = "hex"}]
+license = {text = "Apache-2.0"}
+classifiers = [
+    "License :: OSI Approved :: Apache Software License"
+]
+dependencies = [
+    "llm",
+    "OpenAI",
+]
+
+[project.urls]
+Homepage = "https://github.com/hex/llm-perplexity"
+Changelog = "https://github.com/hex/llm-perplexity/releases"
+Issues = "https://github.com/hex/llm-perplexity/issues"
+CI = "https://github.com/hex/llm-perplexity/actions"
+
+[project.entry-points.llm]
+perplexity = "llm_perplexity"

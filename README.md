@@ -1,0 +1,56 @@
+# llm-perplexity
+
+[![PyPI](https://img.shields.io/pypi/v/llm-perplexity.svg)](https://pypi.org/project/llm-perplexity/)
+[![Changelog](https://img.shields.io/github/v/release/hex/llm-perplexity?include_prereleases&label=changelog)](https://github.com/hex/llm-perplexity/releases)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/hex/llm-perplexity/blob/main/LICENSE)
+
+LLM access to pplx-api 3 by Perplexity Labs
+
+## Installation
+
+Install this plugin in the same environment as [LLM](https://llm.datasette.io/).
+
+```bash
+llm install llm-perplexity
+```
+
+## Usage
+
+First, set an [API key](https://www.perplexity.ai/settings/api) for Perplexity AI:
+
+```bash
+llm keys set perplexity
+# Paste key here
+```
+
+Run `llm models` to list the models, and `llm models --options` to include a list of their options.
+
+Run prompts like this:
+
+```bash
+llm -m sonar-small-chat 'Fun facts about pelicans'
+llm -m sonar-small-online 'Fun facts about walruses'
+llm -m sonar-medium-chat 'Fun facts about wolves'
+llm -m sonar-medium-online 'Fun facts about foxes'
+llm -m codellama-70b-instruct 'Fun facts about lemurs'
+llm -m mistral-7b-instruct 'Fun facts about coyotes'
+llm -m mixtral-8x7b-instruct 'Fun facts about tigers'
+```
+
+## Development
+
+To set up this plugin locally, first checkout the code. Then create a new virtual environment:
+
+```bash
+cd llm-perplexity
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Now install the dependencies and test dependencies:
+
+```bash
+llm install -e '.[test]'
+```
+
+This plugin was made after the [llm-claude-3](https://github.com/simonw/llm-claude-3) plugin by Simon Willison.
