@@ -102,6 +102,8 @@ class Perplexity(llm.Model):
 
     def build_messages(self, prompt, conversation) -> List[dict]:
         messages = []
+        if prompt.system:
+            messages.append({"role": "system", "content": prompt.system})
         if conversation:
             for response in conversation.responses:
                 messages.extend(
@@ -133,9 +135,6 @@ class Perplexity(llm.Model):
 
         if prompt.options.top_k:
             kwargs["top_k"] = prompt.options.top_k
-
-        if prompt.system:
-            kwargs["system"] = prompt.system
 
         if stream:
             with client.chat.completions.create(**kwargs) as stream:
