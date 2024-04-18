@@ -13,6 +13,10 @@ def register_models(register):
     register(Perplexity("codellama-70b-instruct", default_max_tokens=16384), aliases=("pp-70b-instruct",))
     register(Perplexity("mistral-7b-instruct", default_max_tokens=16384), aliases=("pp-7b-instruct",))
     register(Perplexity("mixtral-8x7b-instruct", default_max_tokens=16384), aliases=("pp-8x7b-instruct",))
+    register(Perplexity("mixtral-8x22b-instruct", default_max_tokens=16384), aliases=("pp-8x22b-instruct",))
+    register(Perplexity("llama-3-8b-instruct", default_max_tokens=8192))
+    register(Perplexity("llama-3-70b-instruct", default_max_tokens=8192))
+
 
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
