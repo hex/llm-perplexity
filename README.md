@@ -35,6 +35,9 @@ llm -m sonar-medium-online 'Fun facts about foxes'
 llm -m codellama-70b-instruct 'Fun facts about lemurs'
 llm -m mistral-7b-instruct 'Fun facts about coyotes'
 llm -m mixtral-8x7b-instruct 'Fun facts about tigers'
+llm -m mixtral-8x22b-instruct 'Fun facts about monkeys'
+llm -m llama-3-8b-instruct 'Fun facts about chickens'
+llm -m llama-3-70b-instruct 'Fun facts about flies'
 ```
 
 ## Development
