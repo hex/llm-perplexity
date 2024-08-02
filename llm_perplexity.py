@@ -7,6 +7,14 @@ from typing import Optional, List
 @llm.hookimpl
 def register_models(register):
     # https://docs.perplexity.ai/docs/model-cards
+    register(Perplexity("llama-3.1-sonar-small-128k-online"))
+    register(Perplexity("llama-3.1-sonar-large-128k-online"))
+    register(Perplexity("llama-3.1-sonar-small-128k-chat"))
+    register(Perplexity("llama-3.1-sonar-large-128k-chat"))
+    register(Perplexity("llama-3.1-70b-instruct"))
+    register(Perplexity("llama-3.1-8b-instruct"))
+    
+    # The following models will be deprecated on August 12 2024
     register(Perplexity("llama-3-sonar-small-32k-chat"))
     register(Perplexity("llama-3-sonar-small-32k-online"))
     register(Perplexity("llama-3-sonar-large-32k-chat"))
