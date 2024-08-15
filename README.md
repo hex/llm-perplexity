@@ -28,10 +28,11 @@ Run `llm models` to list the models, and `llm models --options` to include a lis
 Run prompts like this:
 
 ```bash
-llm -m llama-3.1-sonar-small-128k-online 'Fun facts about pelicans'
-llm -m llama-3.1-sonar-large-128k-online 'Fun facts about walruses'
-llm -m llama-3.1-sonar-small-128k-chat 'Fun facts about wolves'
-llm -m llama-3.1-sonar-large-128k-chat 'Fun facts about foxes'
+llm -m sonar-small 'Fun facts about pelicans'
+llm -m sonar-large 'Fun facts about walruses'
+llm -m sonar-huge 'Fun facts about whales'
+llm -m sonar-small-chat 'Fun facts about wolves'
+llm -m sonar-large-chat 'Fun facts about foxes'
 llm -m llama-3.1-8b-instruct 'Fun facts about lemurs'
 llm -m llama-3.1-70b-instruct 'Fun facts about coyotes'
 ```
