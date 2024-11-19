@@ -6,7 +6,7 @@ from typing import Optional, List
 
 @llm.hookimpl
 def register_models(register):
-    # https://docs.perplexity.ai/docs/model-cards
+    # https://docs.perplexity.ai/guides/model-cards
     register(Perplexity("llama-3.1-sonar-small-128k-online"), aliases=("sonar-small",))
     register(Perplexity("llama-3.1-sonar-large-128k-online"), aliases=("sonar-large",))
     register(Perplexity("llama-3.1-sonar-huge-128k-online"), aliases=("sonar-huge",))
@@ -50,6 +50,11 @@ class PerplexityOptions(llm.Options):
     frequency_penalty: Optional[float] = Field(
         description="A multiplicative penalty greater than 0. Values greater than 1.0 penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. A value of 1.0 means no penalty. Incompatible with 'presence_penalty'",
         default=None,
+    )
+
+    return_citations: Optional[bool] = Field(
+        description="Determines whether or not a request to an online model should return citations",
+        default=False,
     )
 
     @field_validator("temperature")
@@ -115,7 +120,7 @@ class Perplexity(llm.Model):
         kwargs = {
             "model": self.model_id,
             "messages": self.build_messages(prompt, conversation),
-            "stream": prompt.options.stream,
+            "stream": stream,
             "max_tokens": prompt.options.max_tokens or None,
         }
 
@@ -126,14 +131,28 @@ class Perplexity(llm.Model):
 
         if prompt.options.top_k:
             kwargs["top_k"] = prompt.options.top_k
+            
+        if prompt.options.return_citations:
+            kwargs["return_citations"] = prompt.options.return_citations
 
         if stream:
             with client.chat.completions.create(**kwargs) as stream:
                 for text in stream:
                     yield text.choices[0].delta.content
+
+            if hasattr(text, 'citations') and text.citations:
+                yield "\n\nCitations:\n"
+                for i, citation in enumerate(text.citations, 1):
+                    yield f"[{i}] {citation}\n"
+
         else:
             completion = client.chat.completions.create(**kwargs)
             yield completion.choices[0].message.content
+            if hasattr(completion, 'citations') and completion.citations:
+                yield "\n\nCitations:\n"
+                for i, citation in enumerate(completion.citations, 1):
+                    yield f"[{i}] {citation}\n"
+            
 
     def __str__(self):
         return f"Perplexity: {self.model_id}"
