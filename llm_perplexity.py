@@ -14,6 +14,7 @@ def register_models(register):
     register(Perplexity("llama-3.1-sonar-large-128k-chat"), aliases=("sonar-large-chat",))
     register(Perplexity("llama-3.1-70b-instruct"))
     register(Perplexity("llama-3.1-8b-instruct"))
+    register(Perplexity("llama-3.3-70b-instruct"))
 
 
 class PerplexityOptions(llm.Options):
