@@ -35,6 +35,7 @@ llm -m sonar-small-chat 'Fun facts about wolves'
 llm -m sonar-large-chat 'Fun facts about foxes'
 llm -m llama-3.1-8b-instruct 'Fun facts about lemurs'
 llm -m llama-3.1-70b-instruct 'Fun facts about coyotes'
+llm -m llama-3.3-70b-instruct 'Fun facts about cats'
 ```
 
 ## Development
