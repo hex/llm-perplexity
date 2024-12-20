@@ -10,10 +10,6 @@ def register_models(register):
     register(Perplexity("llama-3.1-sonar-small-128k-online"), aliases=("sonar-small",))
     register(Perplexity("llama-3.1-sonar-large-128k-online"), aliases=("sonar-large",))
     register(Perplexity("llama-3.1-sonar-huge-128k-online"), aliases=("sonar-huge",))
-    register(Perplexity("llama-3.1-sonar-small-128k-chat"), aliases=("sonar-small-chat",))
-    register(Perplexity("llama-3.1-sonar-large-128k-chat"), aliases=("sonar-large-chat",))
-    register(Perplexity("llama-3.1-70b-instruct"))
-    register(Perplexity("llama-3.1-8b-instruct"))
     register(Perplexity("llama-3.3-70b-instruct"))
 
 
