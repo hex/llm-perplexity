@@ -85,8 +85,13 @@ class Perplexity(llm.Model):
     key_env_var = "LLM_PERPLEXITY_KEY"
     model_id = "perplexity"
     can_stream = True
+    base_url = "https://api.perplexity.ai"
 
-    class Options(PerplexityOptions): ...
+    class Options(PerplexityOptions):
+        use_openrouter: Optional[bool] = Field(
+            description="Whether to use OpenRouter API instead of direct Perplexity API",
+            default=False,
+        )
 
     def __init__(self, model_id):
         self.model_id = model_id
@@ -110,10 +115,24 @@ class Perplexity(llm.Model):
         return messages
 
     def execute(self, prompt, stream, response, conversation):
-        client = OpenAI(api_key=self.get_key(), base_url="https://api.perplexity.ai")
+        if prompt.options.use_openrouter:
+            if not any(p["name"] == "llm-openrouter" for p in llm.get_plugins()):
+                raise llm.ModelError(
+                    "OpenRouter support requires the llm-openrouter plugin. "
+                    "Install it with: llm install llm-openrouter"
+                )
+            api_key = llm.get_key("openrouter", "LLM_OPENROUTER_KEY")
+            base_url = "https://openrouter.ai/api/v1"
+            model_id = f"meta-llama/llama-3.3-70b-instruct" if self.model_id == "llama-3.3-70b-instruct" else f"perplexity/{self.model_id}"
+        else:
+            api_key = self.get_key()
+            base_url = self.base_url
+            model_id = self.model_id
+
+        client = OpenAI(api_key=api_key, base_url=base_url)
 
         kwargs = {
-            "model": self.model_id,
+            "model": model_id,
             "messages": self.build_messages(prompt, conversation),
             "stream": stream,
             "max_tokens": prompt.options.max_tokens or None,
