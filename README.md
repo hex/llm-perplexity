@@ -34,6 +34,26 @@ llm -m sonar-huge 'Fun facts about whales'
 llm -m llama-3.3-70b-instruct 'Fun facts about lemurs'
 ```
 
+### OpenRouter Access
+
+You can also access these models through OpenRouter. First install the OpenRouter plugin:
+
+```bash
+llm install llm-openrouter
+```
+
+Then set your OpenRouter API key:
+
+```bash
+llm keys set openrouter
+```
+
+Use the `--option use_openrouter true` flag to route requests through OpenRouter:
+
+```bash
+llm -m sonar-small --option use_openrouter true 'Fun facts about pelicans'
+```
+
 ## Development
 
 To set up this plugin locally, first checkout the code. Then create a new virtual environment:
