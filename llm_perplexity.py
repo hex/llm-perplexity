@@ -7,10 +7,8 @@ from typing import Optional, List
 @llm.hookimpl
 def register_models(register):
     # https://docs.perplexity.ai/guides/model-cards
-    register(Perplexity("llama-3.1-sonar-small-128k-online"), aliases=("sonar-small",))
-    register(Perplexity("llama-3.1-sonar-large-128k-online"), aliases=("sonar-large",))
-    register(Perplexity("llama-3.1-sonar-huge-128k-online"), aliases=("sonar-huge",))
-    register(Perplexity("llama-3.3-70b-instruct"))
+    register(Perplexity("sonar-pro"))
+    register(Perplexity("sonar"))
 
 
 class PerplexityOptions(llm.Options):
