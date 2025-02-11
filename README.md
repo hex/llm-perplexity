@@ -28,6 +28,7 @@ Run `llm models` to list the models, and `llm models --options` to include a lis
 Run prompts like this:
 
 ```bash
+llm -m sonar-reasoning-pro 'Fun facts about sharks'
 llm -m sonar-reasoning 'Fun facts about plums'
 llm -m sonar-pro 'Fun facts about pelicans'
 llm -m sonar 'Fun facts about walruses'
