@@ -32,6 +32,7 @@ llm -m sonar-reasoning-pro 'Fun facts about sharks'
 llm -m sonar-reasoning 'Fun facts about plums'
 llm -m sonar-pro 'Fun facts about pelicans'
 llm -m sonar 'Fun facts about walruses'
+llm -m r1-1776 'Fun facts about seals'
 ```
 
 ### OpenRouter Access

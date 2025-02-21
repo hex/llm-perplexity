@@ -11,6 +11,7 @@ def register_models(register):
     register(Perplexity("sonar-reasoning"))
     register(Perplexity("sonar-pro"))
     register(Perplexity("sonar"))
+    register(Perplexity("r1-1776"))
 
 
 class PerplexityOptions(llm.Options):
@@ -125,7 +126,11 @@ class Perplexity(llm.Model):
                 )
             api_key = llm.get_key("openrouter", "LLM_OPENROUTER_KEY")
             base_url = "https://openrouter.ai/api/v1"
-            model_id = f"meta-llama/llama-3.3-70b-instruct" if self.model_id == "llama-3.3-70b-instruct" else f"perplexity/{self.model_id}"
+            model_id = (
+                f"meta-llama/llama-3.3-70b-instruct"
+                if self.model_id == "llama-3.3-70b-instruct"
+                else f"perplexity/{self.model_id}"
+            )
         else:
             api_key = self.get_key()
             base_url = self.base_url
@@ -147,7 +152,7 @@ class Perplexity(llm.Model):
 
         if prompt.options.top_k:
             kwargs["top_k"] = prompt.options.top_k
-            
+
         if prompt.options.return_citations:
             kwargs["return_citations"] = prompt.options.return_citations
 
@@ -156,7 +161,7 @@ class Perplexity(llm.Model):
                 for text in stream:
                     yield text.choices[0].delta.content
 
-            if hasattr(text, 'citations') and text.citations:
+            if hasattr(text, "citations") and text.citations:
                 yield "\n\nCitations:\n"
                 for i, citation in enumerate(text.citations, 1):
                     yield f"[{i}] {citation}\n"
@@ -164,11 +169,10 @@ class Perplexity(llm.Model):
         else:
             completion = client.chat.completions.create(**kwargs)
             yield completion.choices[0].message.content
-            if hasattr(completion, 'citations') and completion.citations:
+            if hasattr(completion, "citations") and completion.citations:
                 yield "\n\nCitations:\n"
                 for i, citation in enumerate(completion.citations, 1):
                     yield f"[{i}] {citation}\n"
-            
 
     def __str__(self):
         return f"Perplexity: {self.model_id}"
