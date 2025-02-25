@@ -1,4 +1,8 @@
 import llm
+from llm.utils import (
+    remove_dict_none_values,
+    simplify_usage_dict,
+)
 from openai import OpenAI
 from pydantic import Field, field_validator, model_validator
 from typing import Optional, List
@@ -12,7 +16,6 @@ def register_models(register):
     register(Perplexity("sonar-pro"))
     register(Perplexity("sonar"))
     register(Perplexity("r1-1776"))
-
 
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
@@ -48,11 +51,6 @@ class PerplexityOptions(llm.Options):
     frequency_penalty: Optional[float] = Field(
         description="A multiplicative penalty greater than 0. Values greater than 1.0 penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. A value of 1.0 means no penalty. Incompatible with 'presence_penalty'",
         default=None,
-    )
-
-    return_citations: Optional[bool] = Field(
-        description="Determines whether or not a request to an online model should return citations",
-        default=False,
     )
 
     @field_validator("temperature")
@@ -99,6 +97,61 @@ class Perplexity(llm.Model):
     def __init__(self, model_id):
         self.model_id = model_id
 
+    @staticmethod 
+    def combine_chunks(chunks: List) -> dict:
+        content = ""
+        role = None
+        finish_reason = None
+        # If any of them have log probability, we're going to persist
+        # those later on
+        logprobs = []
+        usage = {}
+        citations = {}
+
+        for item in chunks:
+            if item.usage:
+                usage = item.usage.dict()
+                
+            if item.citations:
+                citations = item.citations
+
+            for choice in item.choices:
+                if choice.logprobs and hasattr(choice.logprobs, "top_logprobs"):
+                    logprobs.append(
+                        {
+                            "text": choice.text if hasattr(choice, "text") else None,
+                            "top_logprobs": choice.logprobs.top_logprobs,
+                        }
+                    )
+
+                if not hasattr(choice, "delta"):
+                    content += choice.text
+                    continue
+                role = choice.delta.role
+                if choice.delta.content is not None:
+                    content += choice.delta.content
+                if choice.finish_reason is not None:
+                    finish_reason = choice.finish_reason
+        
+
+        # Imitations of the OpenAI API may be missing some of these fields
+        combined = {
+            "content": content,
+            "role": role,
+            "finish_reason": finish_reason,
+            "usage": usage,
+            "citations": citations,
+        }
+        if logprobs:
+            combined["logprobs"] = logprobs
+        if chunks:
+            for key in ("id", "object", "model", "created", "index"):
+                value = getattr(chunks[0], key, None)
+                if value is not None:
+                    combined[key] = value
+
+        return combined
+
     def build_messages(self, prompt, conversation) -> List[dict]:
         messages = []
         if prompt.system:
@@ -116,6 +169,17 @@ class Perplexity(llm.Model):
                 )
         messages.append({"role": "user", "content": prompt.prompt})
         return messages
+
+    def set_usage(self, response, usage):
+        if not usage:
+            return
+    
+        input_tokens = usage.pop("prompt_tokens")
+        output_tokens = usage.pop("completion_tokens")
+        usage.pop("total_tokens")
+        response.set_usage(
+            input=input_tokens, output=output_tokens, details=simplify_usage_dict(usage)
+        )
 
     def execute(self, prompt, stream, response, conversation):
         if prompt.options.use_openrouter:
@@ -153,26 +217,42 @@ class Perplexity(llm.Model):
         if prompt.options.top_k:
             kwargs["top_k"] = prompt.options.top_k
 
-        if prompt.options.return_citations:
-            kwargs["return_citations"] = prompt.options.return_citations
-
         if stream:
-            with client.chat.completions.create(**kwargs) as stream:
-                for text in stream:
-                    yield text.choices[0].delta.content
+            completion = client.chat.completions.create(**kwargs)
+            chunks = []
+            usage = None
+            citations = None
 
-            if hasattr(text, "citations") and text.citations:
-                yield "\n\nCitations:\n"
-                for i, citation in enumerate(text.citations, 1):
+            for chunk in completion:
+                chunks.append(chunk)
+                if hasattr(chunk, "usage") and chunk.usage:
+                    usage = chunk.usage.model_dump()
+                if hasattr(chunk, "citations") and chunk.citations:
+                     citations = chunk.citations   
+                try:
+                    content = chunk.choices[0].delta.content
+                except IndexError:
+                    content = None
+                if content is not None:
+                    yield content
+            response.response_json = remove_dict_none_values(Perplexity.combine_chunks(chunks))
+            
+            if citations:
+                yield "\n\n## Citations:\n"
+                for i, citation in enumerate(citations, 1):
                     yield f"[{i}] {citation}\n"
 
         else:
             completion = client.chat.completions.create(**kwargs)
+            response.response_json = remove_dict_none_values(completion.model_dump())
+            usage = completion.usage.model_dump()
             yield completion.choices[0].message.content
             if hasattr(completion, "citations") and completion.citations:
-                yield "\n\nCitations:\n"
+                yield "\n\n## Citations:\n"
                 for i, citation in enumerate(completion.citations, 1):
                     yield f"[{i}] {citation}\n"
+        self.set_usage(response, usage)
+        response._prompt_json = {"messages": kwargs["messages"]}
 
     def __str__(self):
         return f"Perplexity: {self.model_id}"
