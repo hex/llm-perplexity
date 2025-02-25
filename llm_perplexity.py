@@ -11,6 +11,7 @@ from typing import Optional, List
 @llm.hookimpl
 def register_models(register):
     # https://docs.perplexity.ai/guides/model-cards
+    register(Perplexity("sonar-deep-research"))
     register(Perplexity("sonar-reasoning-pro"))
     register(Perplexity("sonar-reasoning"))
     register(Perplexity("sonar-pro"))
