@@ -68,7 +68,7 @@ class PerplexityOptions(llm.Options):
     )
     
     search_recency_filter: Optional[str] = Field(
-        description="Filter search results by time period. Options include 'day', 'week', 'month', 'year'. Only applicable for online models.",
+        description="Filter search results by time period. Options include 'day', 'week', 'month', 'hour', or 'none'. Only applicable for online models.",
         default=None,
     )
     
@@ -108,6 +108,13 @@ class PerplexityOptions(llm.Options):
             raise ValueError("top_k must be in range 0-2048")
         return top_k
 
+    @field_validator("search_recency_filter")
+    @classmethod
+    def validate_search_recency_filter(cls, recency_filter):
+        if recency_filter is not None and recency_filter not in ["day", "week", "month", "hour", "none"]:
+            raise ValueError("search_recency_filter must be one of: 'day', 'week', 'month', 'hour', or 'none'")
+        return recency_filter
+        
     @model_validator(mode="after")
     def validate_temperature_top_p(self):
         if self.temperature != 1.0 and self.top_p is not None:
