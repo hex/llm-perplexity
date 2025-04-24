@@ -50,7 +50,12 @@ llm -m sonar 'Fun facts about walruses'
 llm -m sonar-pro-online 'Latest AI research in 2025'
 
 # Filter search by recency - restrict to recent sources
+llm -m sonar-small-online --option search_recency_filter day 'Tech news today'
+
+# Filter search by recency - specific time periods
 llm -m sonar-small-online --option search_recency_filter week 'Tech news this week'
+llm -m sonar-small-online --option search_recency_filter month 'Tech news this month'
+llm -m sonar-small-online --option search_recency_filter hour 'Very recent news'
 
 # Filter search by domain - specify allowed domains
 llm -m sonar-medium-online --option search_domain_filter github.com,arxiv.org 'LLM advancements'
