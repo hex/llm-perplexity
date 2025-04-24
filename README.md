@@ -27,13 +27,72 @@ Run `llm models` to list the models, and `llm models --options` to include a lis
 
 Run prompts like this:
 
+### Standard Models
+
 ```bash
-llm -m sonar-deep-research 'Fun facts about AI'
-llm -m sonar-reasoning-pro 'Fun facts about sharks'
-llm -m sonar-reasoning 'Fun facts about plums'
-llm -m sonar-pro 'Fun facts about pelicans'
+# Flagship model
+llm -m sonar-pro 'Fun facts about AI'
+
+# Lightweight model
+llm -m sonar-small 'Fun facts about sharks'
+
+# Mid-sized model
+llm -m sonar-medium 'Fun facts about plums'
+
+# Base model
 llm -m sonar 'Fun facts about walruses'
+```
+
+### Online Models with Web Search
+
+```bash
+# Flagship model with web search - for up-to-date information
+llm -m sonar-pro-online 'Latest AI research in 2025'
+
+# Filter search by recency - restrict to recent sources
+llm -m sonar-small-online --option search_recency_filter week 'Tech news this week'
+
+# Filter search by domain - specify allowed domains
+llm -m sonar-medium-online --option search_domain_filter github.com,arxiv.org 'LLM advancements'
+```
+
+### Other Available Models
+
+```bash
+# Legacy models
+llm -m sonar-deep-research 'Complex research question'
+llm -m sonar-reasoning-pro 'Problem solving task'
+llm -m sonar-reasoning 'Logical reasoning'
+
+# Open-source models
+llm -m mistral-7b 'Simple general task'
+llm -m codellama-34b 'Write a Python function'
+llm -m llama-2-70b 'Generate creative content'
 llm -m r1-1776 'Fun facts about seals'
+```
+
+### Advanced Options
+
+The plugin supports various parameters to customize model behavior:
+
+```bash
+# Control randomness (0.0 to 2.0, higher = more random)
+llm -m sonar-pro --option temperature 0.7 'Generate creative ideas'
+
+# Nucleus sampling threshold (alternative to temperature)
+llm -m sonar-pro --option top_p 0.9 'Generate varied responses'
+
+# Token filtering (between 0 and 2048)
+llm -m sonar-pro --option top_k 40 'Generate focused content'
+
+# Limit response length
+llm -m sonar-pro --option max_tokens 500 'Summarize this article'
+
+# Return images in response (if model supports it)
+llm -m sonar-pro-online --option return_images true 'Show me diagrams of neural networks'
+
+# Return related questions
+llm -m sonar-pro-online --option return_related_questions true 'How does quantum computing work?'
 ```
 
 ### OpenRouter Access
