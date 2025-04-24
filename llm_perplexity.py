@@ -11,11 +11,24 @@ from typing import Optional, List
 @llm.hookimpl
 def register_models(register):
     # https://docs.perplexity.ai/guides/model-cards
+    # Standard models
+    register(Perplexity("sonar-pro"))      # Flagship model
+    register(Perplexity("sonar-small"))    # Lightweight model
+    register(Perplexity("sonar-medium"))   # Mid-size model
+    register(Perplexity("sonar"))          # Base model
+    
+    # Online models with real-time web search
+    register(Perplexity("sonar-pro-online"))     # Flagship model with web search
+    register(Perplexity("sonar-small-online"))   # Lightweight model with web search
+    register(Perplexity("sonar-medium-online"))  # Mid-size model with web search
+    
+    # Legacy/specialized models (may be deprecated)
     register(Perplexity("sonar-deep-research"))
     register(Perplexity("sonar-reasoning-pro"))
     register(Perplexity("sonar-reasoning"))
-    register(Perplexity("sonar-pro"))
-    register(Perplexity("sonar"))
+    register(Perplexity("mistral-7b"))      # Open-source model
+    register(Perplexity("codellama-34b"))   # Code-specific model
+    register(Perplexity("llama-2-70b"))     # Large model
     register(Perplexity("r1-1776"))
 
 class PerplexityOptions(llm.Options):
@@ -52,6 +65,26 @@ class PerplexityOptions(llm.Options):
     frequency_penalty: Optional[float] = Field(
         description="A multiplicative penalty greater than 0. Values greater than 1.0 penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. A value of 1.0 means no penalty. Incompatible with 'presence_penalty'",
         default=None,
+    )
+    
+    search_recency_filter: Optional[str] = Field(
+        description="Filter search results by time period. Options include 'day', 'week', 'month', 'year'. Only applicable for online models.",
+        default=None,
+    )
+    
+    search_domain_filter: Optional[str] = Field(
+        description="Filter search results by domain. Provide a comma-separated list of domains to include. Only applicable for online models.",
+        default=None,
+    )
+    
+    return_images: Optional[bool] = Field(
+        description="Whether to return images in the response. Set to true to enable image responses.",
+        default=False,
+    )
+    
+    return_related_questions: Optional[bool] = Field(
+        description="Whether to return related questions in the response.",
+        default=False,
     )
 
     @field_validator("temperature")
@@ -110,10 +143,11 @@ class Perplexity(llm.Model):
         citations = {}
 
         for item in chunks:
-            if item.usage:
-                usage = item.usage.dict()
+            if hasattr(item, "usage") and item.usage:
+                usage = item.usage.model_dump()
                 
-            if item.citations:
+            if hasattr(item, "citations") and item.citations:
+                # Store citations for later processing
                 citations = item.citations
 
             for choice in item.choices:
@@ -217,6 +251,20 @@ class Perplexity(llm.Model):
 
         if prompt.options.top_k:
             kwargs["top_k"] = prompt.options.top_k
+            
+        # Add search parameters for online models
+        if prompt.options.search_recency_filter and "-online" in model_id:
+            kwargs["search_recency_filter"] = prompt.options.search_recency_filter
+            
+        if prompt.options.search_domain_filter and "-online" in model_id:
+            kwargs["search_domain_filter"] = prompt.options.search_domain_filter
+            
+        # Add options for return values
+        if prompt.options.return_images:
+            kwargs["return_images"] = prompt.options.return_images
+            
+        if prompt.options.return_related_questions:
+            kwargs["return_related_questions"] = prompt.options.return_related_questions
 
         if stream:
             completion = client.chat.completions.create(**kwargs)
@@ -241,7 +289,15 @@ class Perplexity(llm.Model):
             if citations:
                 yield "\n\n## Citations:\n"
                 for i, citation in enumerate(citations, 1):
-                    yield f"[{i}] {citation}\n"
+                    if isinstance(citation, dict) and "url" in citation:
+                        # Handle structured citation object
+                        citation_text = citation["url"]
+                        if "title" in citation:
+                            citation_text = f"{citation['title']} - {citation_text}"
+                        yield f"[{i}] {citation_text}\n"
+                    else:
+                        # Handle simple string citations
+                        yield f"[{i}] {citation}\n"
 
         else:
             completion = client.chat.completions.create(**kwargs)
@@ -251,7 +307,15 @@ class Perplexity(llm.Model):
             if hasattr(completion, "citations") and completion.citations:
                 yield "\n\n## Citations:\n"
                 for i, citation in enumerate(completion.citations, 1):
-                    yield f"[{i}] {citation}\n"
+                    if isinstance(citation, dict) and "url" in citation:
+                        # Handle structured citation object
+                        citation_text = citation["url"]
+                        if "title" in citation:
+                            citation_text = f"{citation['title']} - {citation_text}"
+                        yield f"[{i}] {citation_text}\n"
+                    else:
+                        # Handle simple string citations
+                        yield f"[{i}] {citation}\n"
         self.set_usage(response, usage)
         response._prompt_json = {"messages": kwargs["messages"]}
 

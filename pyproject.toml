@@ -1,6 +1,6 @@
 [project]
 name = "llm-perplexity"
-version = "2025.2.3"
+version = "2025.4.1"
 description = "LLM access to pplx-api 3 by Perplexity Labs"
 readme = "README.md"
 authors = [{name = "hex"}]
