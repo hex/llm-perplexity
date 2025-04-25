@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: '{"model": "sonar-small", "messages": [{"role": "user", "content": "Provide
+      two fun facts about sharks, be brief"}], "stream": true, "temperature": 1.0}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '123'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 1.1.1
+    method: POST
+    uri: https://api.perplexity.ai/chat/completions
+  response:
+    body:
+      string: 'data: {"id":"cmpl_example_id","object":"chat.completion.chunk","created":1712345678,"model":"sonar-small","choices":[{"index":0,"delta":{"role":"assistant","content":"Fun
+        fact 1: Sharks have been around for over 450 million years, predating dinosaurs
+        by more than 200 million years.\n\nFun fact 2: Some shark species, like the
+        Greenland shark, can live for over 400 years, making them one of the longest-living
+        vertebrates on Earth."},"finish_reason":null}],"usage":null}
+
+        data: {"id":"cmpl_example_id","object":"chat.completion.chunk","created":1712345678,"model":"sonar-small","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":18,"completion_tokens":75,"total_tokens":93}}
+
+        [DONE]
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-type:
+      - text/event-stream
+      date:
+      - Wed, 24 Apr 2025 10:00:00 GMT
+      server:
+      - uvicorn
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+    status:
+      code: 200
+      message: OK
+version: 1

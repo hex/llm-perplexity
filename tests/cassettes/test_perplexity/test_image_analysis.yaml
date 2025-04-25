@@ -1,0 +1,55 @@
+interactions:
+- request:
+    body: '{"model": "sonar-pro", "messages": [{"role": "user", "content": [{"type":
+      "text", "text": "What color is shown in this image?"}, {"type": "image_url",
+      "image_url": {"url": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg=="}}]}],
+      "stream": true, "temperature": 1.0}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '300'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 1.1.1
+    method: POST
+    uri: https://api.perplexity.ai/chat/completions
+  response:
+    body:
+      string: 'data: {"id":"cmpl_example_id3","object":"chat.completion.chunk","created":1712347890,"model":"sonar-pro","choices":[{"index":0,"delta":{"role":"assistant","content":"The
+        image shows a solid red color. It appears to be a simple 1x1 pixel image with
+        a pure red color value (RGB 255, 0, 0)."},"finish_reason":null}],"usage":null}
+
+        data: {"id":"cmpl_example_id3","object":"chat.completion.chunk","created":1712347890,"model":"sonar-pro","choices":[{"index":0,"delta":{},"finish_reason":"stop"}],"usage":{"prompt_tokens":42,"completion_tokens":30,"total_tokens":72}}
+
+        [DONE]
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      cache-control:
+      - no-cache
+      connection:
+      - keep-alive
+      content-type:
+      - text/event-stream
+      date:
+      - Wed, 24 Apr 2025 10:30:00 GMT
+      server:
+      - uvicorn
+      transfer-encoding:
+      - chunked
+      vary:
+      - Origin
+    status:
+      code: 200
+      message: OK
+version: 1

@@ -12,3 +12,8 @@ dist
 build
 .history
 /.idea
+
+# Testing
+.coverage
+htmlcov/
+.tox/
