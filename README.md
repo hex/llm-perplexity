@@ -134,6 +134,23 @@ Use the `--option use_openrouter true` flag to route requests through OpenRouter
 llm -m sonar-small --option use_openrouter true 'Fun facts about pelicans'
 ```
 
+## Testing
+
+This plugin includes comprehensive tests for all features. To run the tests:
+
+```bash
+# Install test dependencies
+llm install -e '.[test]'
+
+# Run all tests with the provided script
+./run_tests.sh
+
+# Or use pytest directly
+python -m pytest
+```
+
+For more detailed information about testing, see the [tests/README.md](tests/README.md) file.
+
 ## Development
 
 To set up this plugin locally, first checkout the code. Then create a new virtual environment:
