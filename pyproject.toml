@@ -13,14 +13,6 @@ dependencies = [
     "OpenAI",
 ]
 
-[project.optional-dependencies]
-test = [
-    "pytest",
-    "pytest-asyncio",
-    "vcrpy",
-    "pytest-vcr",
-]
-
 [project.urls]
 Homepage = "https://github.com/hex/llm-perplexity"
 Changelog = "https://github.com/hex/llm-perplexity/releases"
