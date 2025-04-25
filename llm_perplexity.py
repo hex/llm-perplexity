@@ -10,18 +10,11 @@ from typing import Optional, List, Dict
 # Model capabilities
 MODEL_CAPABILITIES = {
     "sonar-pro": {"web_search": False},
-    "sonar-small": {"web_search": False},
-    "sonar-medium": {"web_search": False},
     "sonar": {"web_search": False},
     "sonar-pro-online": {"web_search": True},
-    "sonar-small-online": {"web_search": True},
-    "sonar-medium-online": {"web_search": True},
     "sonar-deep-research": {"web_search": False},
     "sonar-reasoning-pro": {"web_search": False},
     "sonar-reasoning": {"web_search": False},
-    "mistral-7b": {"web_search": False},
-    "codellama-34b": {"web_search": False},
-    "llama-2-70b": {"web_search": False},
     "r1-1776": {"web_search": False}
 }
 
