@@ -33,12 +33,6 @@ Run prompts like this:
 # Flagship model
 llm -m sonar-pro 'Fun facts about AI'
 
-# Lightweight model
-llm -m sonar-small 'Fun facts about sharks'
-
-# Mid-sized model
-llm -m sonar-medium 'Fun facts about plums'
-
 # Base model
 llm -m sonar 'Fun facts about walruses'
 ```
@@ -50,29 +44,24 @@ llm -m sonar 'Fun facts about walruses'
 llm -m sonar-pro-online 'Latest AI research in 2025'
 
 # Filter search by recency - restrict to recent sources
-llm -m sonar-small-online --option search_recency_filter day 'Tech news today'
+llm -m sonar-pro-online --option search_recency_filter day 'Tech news today'
 
 # Filter search by recency - specific time periods
-llm -m sonar-small-online --option search_recency_filter week 'Tech news this week'
-llm -m sonar-small-online --option search_recency_filter month 'Tech news this month'
-llm -m sonar-small-online --option search_recency_filter hour 'Very recent news'
+llm -m sonar-pro-online --option search_recency_filter week 'Tech news this week'
+llm -m sonar-pro-online --option search_recency_filter month 'Tech news this month'
+llm -m sonar-pro-online --option search_recency_filter hour 'Very recent news'
 
 # Filter search by domain - specify allowed domains
-llm -m sonar-medium-online --option search_domain_filter github.com,arxiv.org 'LLM advancements'
+llm -m sonar-pro-online --option search_domain_filter github.com,arxiv.org 'LLM advancements'
 ```
 
 ### Other Available Models
 
 ```bash
-# Legacy models
+# Research and reasoning models
 llm -m sonar-deep-research 'Complex research question'
 llm -m sonar-reasoning-pro 'Problem solving task'
 llm -m sonar-reasoning 'Logical reasoning'
-
-# Open-source models
-llm -m mistral-7b 'Simple general task'
-llm -m codellama-34b 'Write a Python function'
-llm -m llama-2-70b 'Generate creative content'
 llm -m r1-1776 'Fun facts about seals'
 ```
 
@@ -131,7 +120,7 @@ llm keys set openrouter
 Use the `--option use_openrouter true` flag to route requests through OpenRouter:
 
 ```bash
-llm -m sonar-small --option use_openrouter true 'Fun facts about pelicans'
+llm -m sonar-pro --option use_openrouter true 'Fun facts about pelicans'
 ```
 
 ## Development
@@ -149,5 +138,59 @@ Now install the dependencies and test dependencies:
 ```bash
 llm install -e '.[test]'
 ```
+
+### Running Tests
+
+The test suite is comprehensive and tests all example commands from the documentation with actual API calls.
+
+Before running tests, you need to set up your environment variables:
+
+1. Copy the `.env.example` file to `.env`:
+   ```bash
+   cp .env.example .env
+   ```
+
+2. Edit the `.env` file and add your Perplexity API key:
+   ```
+   LLM_PERPLEXITY_KEY=your_perplexity_api_key_here
+   ```
+
+3. (Optional) If you want to test OpenRouter integration, also add your OpenRouter API key:
+   ```
+   LLM_OPENROUTER_KEY=your_openrouter_api_key_here
+   ```
+
+4. Install the package and test dependencies using one of these methods:
+
+   **Using the setup script:**
+   ```bash
+   ./setup.sh
+   ```
+
+   **Using make:**
+   ```bash
+   make setup
+   ```
+
+   **Manually:**
+   ```bash
+   pip install -e .
+   pip install pytest python-dotenv pillow
+   ```
+
+Run the tests with pytest:
+
+```bash
+# Run all tests
+pytest test_llm_perplexity.py
+
+# Using make
+make test
+
+# Run a specific test
+pytest test_llm_perplexity.py::test_standard_models
+```
+
+Note: Running the full test suite will make real API calls to Perplexity, which may incur costs depending on your account plan.
 
 This plugin was made after the [llm-claude-3](https://github.com/simonw/llm-claude-3) plugin by Simon Willison.
