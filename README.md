@@ -93,12 +93,26 @@ llm -m sonar-pro --option top_k 40 'Generate focused content'
 # Limit response length
 llm -m sonar-pro --option max_tokens 500 'Summarize this article'
 
-# Return images in response (if model supports it)
-llm -m sonar-pro-online --option return_images true 'Show me diagrams of neural networks'
-
 # Return related questions
 llm -m sonar-pro-online --option return_related_questions true 'How does quantum computing work?'
 ```
+
+### Using Images with Perplexity
+
+The plugin supports sending images to Perplexity models for analysis (multi-modal input):
+
+```bash
+# Analyze an image with Perplexity
+llm -m sonar-pro --option image_path /path/to/your/image.jpg 'What can you tell me about this image?'
+
+# Ask specific questions about an image
+llm -m sonar-pro --option image_path /path/to/screenshot.png 'What text appears in this screenshot?'
+
+# Multi-modal conversation with an image
+llm -m sonar-pro --option image_path /path/to/diagram.png 'Explain the process shown in this diagram'
+```
+
+Note: Only certain Perplexity models support image inputs. Currently the following formats are supported: PNG, JPEG, and GIF.
 
 ### OpenRouter Access
 
