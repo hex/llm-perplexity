@@ -8,7 +8,7 @@ version = "2025.4.1"
 description = "LLM access to pplx-api 3 by Perplexity Labs"
 readme = "README.md"
 authors = [{name = "hex"}]
-license = "Apache-2.0"
+license = {text = "Apache-2.0"}
 dependencies = [
     "llm",
     "openai>=1.0.0",
