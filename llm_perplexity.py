@@ -7,7 +7,7 @@ from openai import OpenAI
 from pydantic import Field, field_validator, model_validator
 from typing import Optional, List, Dict
 
-# Model capabilities - Updated as of 2025
+# Model capabilities - Updated as of 2025-06-03
 MODEL_CAPABILITIES = {
     "sonar-deep-research": {"web_search": False},
     "sonar-reasoning-pro": {"web_search": False},
