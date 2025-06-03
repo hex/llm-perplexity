@@ -25,39 +25,26 @@ llm keys set perplexity
 
 Run `llm models` to list the models, and `llm models --options` to include a list of their options.
 
-Run prompts like this:
+## Available Models
 
-### Standard Models
+Most Perplexity models have access to real-time web information. Here are the currently available models (as of 2025-06-03) from https://docs.perplexity.ai/models/model-cards:
+
+- **sonar-pro** - Flagship model (200k context) - with web search
+- **sonar** - Base model (128k context) - with web search
+- **sonar-deep-research** - Deep research model (128k context) - with web search
+- **sonar-reasoning-pro** - Advanced reasoning model (128k context) - with web search
+- **sonar-reasoning** - Reasoning model (128k context) - with web search
+- **r1-1776** - Specialized model (128k context) - no web search
+
+Run prompts like this:
 
 ```bash
 # Flagship model
-llm -m sonar-pro 'Fun facts about AI'
+llm -m sonar-pro 'Latest AI research in 2025'
 
 # Base model
 llm -m sonar 'Fun facts about walruses'
-```
 
-### Online Models with Web Search
-
-```bash
-# Flagship model with web search - for up-to-date information
-llm -m sonar-pro-online 'Latest AI research in 2025'
-
-# Filter search by recency - restrict to recent sources
-llm -m sonar-pro-online --option search_recency_filter day 'Tech news today'
-
-# Filter search by recency - specific time periods
-llm -m sonar-pro-online --option search_recency_filter week 'Tech news this week'
-llm -m sonar-pro-online --option search_recency_filter month 'Tech news this month'
-llm -m sonar-pro-online --option search_recency_filter hour 'Very recent news'
-
-# Filter search by domain - specify allowed domains
-llm -m sonar-pro-online --option search_domain_filter github.com,arxiv.org 'LLM advancements'
-```
-
-### Other Available Models
-
-```bash
 # Research and reasoning models
 llm -m sonar-deep-research 'Complex research question'
 llm -m sonar-reasoning-pro 'Problem solving task'
@@ -83,7 +70,7 @@ llm -m sonar-pro --option top_k 40 'Generate focused content'
 llm -m sonar-pro --option max_tokens 500 'Summarize this article'
 
 # Return related questions
-llm -m sonar-pro-online --option return_related_questions true 'How does quantum computing work?'
+llm -m sonar-pro --option return_related_questions true 'How does quantum computing work?'
 ```
 
 ### Using Images with Perplexity
