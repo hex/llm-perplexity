@@ -203,16 +203,16 @@ class Perplexity(llm.Model):
 
     def build_messages(self, prompt, conversation) -> List[dict]:
         messages = []
-        # System message handling with optional citation suppression directive
-        system_message = prompt.system if prompt.system else None
-        if prompt.options.include_citations is False:
-            directive = "Do not include bracketed numeric citation markers like [1], [2]; integrate sources naturally without inline citation tokens."
-            if system_message:
-                system_message = f"{system_message}\n\n{directive}"
-            else:
-                system_message = directive
+
+        system_message = "\n".join(filter(None, (
+            prompt.system,
+            "Do not include bracketed numeric citation markers like [1], [2]; integrate sources naturally without inline citation tokens."
+            if prompt.options.include_citations is False else None
+        )))
+
         if system_message:
             messages.append({"role": "system", "content": system_message})
+
         if conversation:
             for response in conversation.responses:
                 messages.extend(
