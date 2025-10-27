@@ -71,6 +71,9 @@ llm -m sonar-pro --option max_tokens 500 'Summarize this article'
 
 # Return related questions
 llm -m sonar-pro --option return_related_questions true 'How does quantum computing work?'
+
+# Suppress citations section and discourage inline [n] markers
+llm -m sonar-pro --option include_citations false 'Latest AI research in 2025'
 ```
 
 ### Using Images with Perplexity

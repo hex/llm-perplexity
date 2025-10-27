@@ -79,6 +79,11 @@ class PerplexityOptions(llm.Options):
         default=None,
     )
 
+    include_citations: Optional[bool] = Field(
+        description="Include formatted citations section in the text output (does not affect JSON response)",
+        default=True,
+    )
+
     @field_validator("temperature")
     @classmethod
     def validate_temperature(cls, temperature):
@@ -198,8 +203,16 @@ class Perplexity(llm.Model):
 
     def build_messages(self, prompt, conversation) -> List[dict]:
         messages = []
-        if prompt.system:
-            messages.append({"role": "system", "content": prompt.system})
+        # System message handling with optional citation suppression directive
+        system_message = prompt.system if prompt.system else None
+        if prompt.options.include_citations is False:
+            directive = "Do not include bracketed numeric citation markers like [1], [2]; integrate sources naturally without inline citation tokens."
+            if system_message:
+                system_message = f"{system_message}\n\n{directive}"
+            else:
+                system_message = directive
+        if system_message:
+            messages.append({"role": "system", "content": system_message})
         if conversation:
             for response in conversation.responses:
                 messages.extend(
@@ -350,7 +363,7 @@ class Perplexity(llm.Model):
                     yield content
             response.response_json = remove_dict_none_values(Perplexity.combine_chunks(chunks))
             
-            if citations:
+            if citations and prompt.options.include_citations:
                 yield self.format_citations(citations)
 
         else:
@@ -358,7 +371,7 @@ class Perplexity(llm.Model):
             response.response_json = remove_dict_none_values(completion.model_dump())
             usage = completion.usage.model_dump()
             yield completion.choices[0].message.content
-            if hasattr(completion, "citations") and completion.citations:
+            if hasattr(completion, "citations") and completion.citations and prompt.options.include_citations:
                 yield self.format_citations(completion.citations)
         self.set_usage(response, usage)
         response._prompt_json = {"messages": kwargs["messages"]}
