@@ -224,10 +224,11 @@ def test_citations_handling():
     """Test that citations are properly handled for online models."""
     try:
         print(f"\nTesting citations handling")
-        model = llm.get_model("sonar-pro-online")
+        model = llm.get_model("sonar-pro")
         print(f"Model instance: {model}")
         response = model.prompt(
             "What are the latest developments in generative AI?", 
+            max_tokens=500,
             stream=False
         )
         assert response is not None
@@ -236,6 +237,29 @@ def test_citations_handling():
         print(f"Citations test passed")
     except Exception as e:
         print(f"Error testing citations: {str(e)}")
+        traceback.print_exc(file=sys.stdout)
+        raise
+
+@requires_api_key
+def test_citations_excluding():
+    """include_citations False should omit citations section and citation marks."""
+    try:
+        print("\nTesting excluding citations")
+        model = llm.get_model("sonar-pro")
+        print(f"Model instance: {model}")
+        response = model.prompt(
+            "What are the latest developments in generative AI?", 
+            max_tokens=500,
+            stream=False,
+            include_citations=False
+        )
+        text = response.text()
+        assert text and len(text) > 0
+        assert "## Citations:" not in text
+        assert "[1]" not in text
+        print("Excluding citations test passed")
+    except Exception as e:
+        print(f"Error testing excluding citations: {str(e)}")
         traceback.print_exc(file=sys.stdout)
         raise
 
