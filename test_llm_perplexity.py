@@ -188,6 +188,27 @@ def test_streaming_response():
         traceback.print_exc(file=sys.stdout)
         raise
 
+@requires_api_key
+def test_pro_search_streaming():
+    """Test Pro Search by enabling search_type with streaming."""
+    try:
+        print("\nTesting Pro Search streaming")
+        model = llm.get_model("sonar-pro")
+        print(f"Model instance: {model}")
+        response = model.prompt(
+            "Summarize one recent AI research trend.",
+            stream=True,
+            search_type="pro",
+        )
+        chunks = list(response)
+        assert len(chunks) > 0
+        assert "".join(chunks)
+        print("Pro Search streaming test passed")
+    except Exception as e:
+        print(f"Error testing Pro Search streaming: {str(e)}")
+        traceback.print_exc(file=sys.stdout)
+        raise
+
 # Test error handling for invalid options
 @requires_api_key
 @pytest.mark.parametrize(

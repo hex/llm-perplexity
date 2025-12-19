@@ -5,14 +5,14 @@ from llm.utils import (
 )
 from openai import OpenAI
 from pydantic import Field, field_validator, model_validator
-from typing import Optional, List, Dict
+from typing import Optional, List, Dict, Literal
 
 # Model capabilities - Updated as of 2025-06-03
 MODEL_CAPABILITIES = {
     "sonar-deep-research": {"web_search": False},
     "sonar-reasoning-pro": {"web_search": False},
     "sonar-reasoning": {"web_search": False},
-    "sonar-pro": {"web_search": False},
+    "sonar-pro": {"web_search": True},
     "sonar": {"web_search": False},
     "r1-1776": {"web_search": False}
 }
@@ -66,6 +66,11 @@ class PerplexityOptions(llm.Options):
     
     search_domain_filter: Optional[str] = Field(
         description="Filter search results by domain. Provide a comma-separated list of domains to include. Only applicable for online models.",
+        default=None,
+    )
+
+    search_type: Optional[Literal["fast", "pro", "auto"]] = Field(
+        description="Web search type for Sonar Pro. Options include 'fast', 'pro', or 'auto'. 'pro' and 'auto' require streaming to take effect.",
         default=None,
     )
     
@@ -342,6 +347,8 @@ class Perplexity(llm.Model):
         # Add options for return values
         if prompt.options.return_related_questions:
             kwargs["return_related_questions"] = prompt.options.return_related_questions
+        if prompt.options.search_type and self.capabilities.get("web_search"):
+            kwargs["web_search_options"] = {"search_type": prompt.options.search_type}
 
         if stream:
             completion = client.chat.completions.create(**kwargs)
