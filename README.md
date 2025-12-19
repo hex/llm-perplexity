@@ -72,6 +72,10 @@ llm -m sonar-pro --option max_tokens 500 'Summarize this article'
 # Return related questions
 llm -m sonar-pro --option return_related_questions true 'How does quantum computing work?'
 
+# Use Pro Search or auto classification (requires streaming)
+llm -m sonar-pro --option search_type pro 'Analyze the latest developments in quantum computing'
+llm -m sonar-pro --option search_type auto 'Compare the energy efficiency of popular EVs'
+
 # Suppress citations section and discourage inline [n] markers
 llm -m sonar-pro --option include_citations false 'Latest AI research in 2025'
 ```
