@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.8", "3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -24,7 +24,11 @@ jobs:
     - name: Install dependencies
       run: |
         pip install -e '.[test]'
+    - name: Run tests
+      run: |
+        pytest test_llm_perplexity.py -x -q
   deploy:
+    needs: test
     runs-on: ubuntu-latest
     environment: release
     permissions:
