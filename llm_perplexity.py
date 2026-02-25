@@ -362,45 +362,52 @@ class Perplexity(llm.Model):
         else:
             kwargs["temperature"] = prompt.options.temperature
 
+        if prompt.options.stop:
+            kwargs["stop"] = prompt.options.stop
+
+        # Perplexity-specific parameters go in extra_body since the
+        # openai client rejects non-standard kwargs
+        extra = {}
+
         if prompt.options.top_k:
-            kwargs["top_k"] = prompt.options.top_k
+            extra["top_k"] = prompt.options.top_k
 
         # Search parameters
         if prompt.options.search_recency_filter:
-            kwargs["search_recency_filter"] = prompt.options.search_recency_filter
+            extra["search_recency_filter"] = prompt.options.search_recency_filter
 
         if prompt.options.search_domain_filter:
             domains = [d.strip() for d in prompt.options.search_domain_filter.split(",") if d.strip()]
             if domains:
-                kwargs["search_domain_filter"] = ",".join(domains)
+                extra["search_domain_filter"] = ",".join(domains)
 
         if prompt.options.search_type:
-            kwargs["web_search_options"] = {"search_type": prompt.options.search_type}
+            extra["web_search_options"] = {"search_type": prompt.options.search_type}
 
         if prompt.options.search_mode:
-            kwargs["search_mode"] = prompt.options.search_mode
+            extra["search_mode"] = prompt.options.search_mode
 
         if prompt.options.disable_search:
-            kwargs["disable_search"] = prompt.options.disable_search
+            extra["disable_search"] = prompt.options.disable_search
 
         if prompt.options.search_language_filter:
-            kwargs["search_language_filter"] = prompt.options.search_language_filter
+            extra["search_language_filter"] = prompt.options.search_language_filter
 
         # Generation parameters
         if prompt.options.reasoning_effort:
-            kwargs["reasoning_effort"] = prompt.options.reasoning_effort
+            extra["reasoning_effort"] = prompt.options.reasoning_effort
 
         if prompt.options.return_images:
-            kwargs["return_images"] = prompt.options.return_images
+            extra["return_images"] = prompt.options.return_images
 
         if prompt.options.return_related_questions:
-            kwargs["return_related_questions"] = prompt.options.return_related_questions
+            extra["return_related_questions"] = prompt.options.return_related_questions
 
         if prompt.options.language_preference:
-            kwargs["language_preference"] = prompt.options.language_preference
+            extra["language_preference"] = prompt.options.language_preference
 
-        if prompt.options.stop:
-            kwargs["stop"] = prompt.options.stop
+        if extra:
+            kwargs["extra_body"] = extra
 
         if stream:
             completion = client.chat.completions.create(**kwargs)
