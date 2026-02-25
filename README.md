@@ -38,7 +38,7 @@ Run prompts like this:
 
 ```bash
 # Flagship model
-llm -m sonar-pro 'Latest AI research in 2025'
+llm -m sonar-pro 'Latest AI research'
 
 # Base model
 llm -m sonar 'Fun facts about walruses'
@@ -73,7 +73,7 @@ llm -m sonar-pro --option search_type pro 'Analyze the latest developments in qu
 llm -m sonar-pro --option search_type auto 'Compare the energy efficiency of popular EVs'
 
 # Suppress citations section and discourage inline [n] markers
-llm -m sonar-pro --option include_citations false 'Latest AI research in 2025'
+llm -m sonar-pro --option include_citations false 'Latest AI research'
 
 # Search mode: web (default), academic, or sec (SEC filings)
 llm -m sonar-pro --option search_mode academic 'Recent papers on transformer architectures'
@@ -82,11 +82,20 @@ llm -m sonar-pro --option search_mode sec 'Apple quarterly earnings'
 # Disable web search entirely
 llm -m sonar-pro --option disable_search true 'What is the capital of France?'
 
+# Filter search results by domain
+llm -m sonar-pro --option search_domain_filter 'arxiv.org,nature.com' 'Recent AI papers'
+
 # Filter search results by recency (hour, day, week, month, year)
 llm -m sonar-pro --option search_recency_filter year 'Major events'
 
 # Filter search results by language
 llm -m sonar-pro --option search_language_filter en 'Latest tech news'
+
+# Penalize repetition (presence_penalty: -2.0 to 2.0)
+llm -m sonar-pro --option presence_penalty 1.5 'Tell me about different dog breeds'
+
+# Penalize frequent tokens (frequency_penalty: > 0, 1.0 = no penalty)
+llm -m sonar-pro --option frequency_penalty 1.5 'Write a varied paragraph about nature'
 
 # Control reasoning effort (minimal, low, medium, high)
 llm -m sonar-reasoning-pro --option reasoning_effort high 'Solve this complex math problem'
