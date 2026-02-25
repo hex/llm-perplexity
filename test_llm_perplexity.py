@@ -136,14 +136,9 @@ def test_pro_search_streaming():
 )
 def test_invalid_options(option_name, invalid_value, expected_exception):
     """Test error handling for invalid option values."""
-    model = llm.get_model("sonar-pro")
+    from llm_perplexity import PerplexityOptions
     with pytest.raises(expected_exception):
-        prompt = llm.Prompt(
-            "This should fail",
-            model=model,
-            options={option_name: invalid_value}
-        )
-        model.execute(prompt)
+        PerplexityOptions(**{option_name: invalid_value})
 
 @requires_api_key
 def test_citations_handling():
