@@ -23,11 +23,8 @@ if not api_key:
 MODELS = [
     "sonar-pro",
     "sonar",
-    "sonar-pro-online",
     "sonar-deep-research",
     "sonar-reasoning-pro",
-    "sonar-reasoning",
-    "r1-1776"
 ]
 
 console = Console()
@@ -45,14 +42,14 @@ for model_id in MODELS:
         # Simple ping with minimal token usage
         response = model.prompt("Hi", stream=False)
         text = response.text().strip()
-        status = "✅ Yes" if text else "❌ No response"
+        status = "Yes" if text else "No response"
         error = ""
     except Exception as e:
-        status = "❌ No"
+        status = "No"
         error = str(e)
-    
+
     table.add_row(model_id, status, error)
 
 console.print(table)
 console.print("\nNote: Some models may require specific subscription tiers.")
-console.print("If you're having trouble with a specific model, check your API key permissions.") 
+console.print("If you're having trouble with a specific model, check your API key permissions.")

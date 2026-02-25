@@ -27,14 +27,12 @@ Run `llm models` to list the models, and `llm models --options` to include a lis
 
 ## Available Models
 
-Most Perplexity models have access to real-time web information. Here are the currently available models (as of 2025-06-03) from https://docs.perplexity.ai/models/model-cards:
+All Perplexity models have access to real-time web information. Here are the currently available models (as of 2026-02) from https://docs.perplexity.ai/models/model-cards:
 
 - **sonar-pro** - Flagship model (200k context) - with web search
 - **sonar** - Base model (128k context) - with web search
 - **sonar-deep-research** - Deep research model (128k context) - with web search
 - **sonar-reasoning-pro** - Advanced reasoning model (128k context) - with web search
-- **sonar-reasoning** - Reasoning model (128k context) - with web search
-- **r1-1776** - Specialized model (128k context) - no web search
 
 Run prompts like this:
 
@@ -48,8 +46,6 @@ llm -m sonar 'Fun facts about walruses'
 # Research and reasoning models
 llm -m sonar-deep-research 'Complex research question'
 llm -m sonar-reasoning-pro 'Problem solving task'
-llm -m sonar-reasoning 'Logical reasoning'
-llm -m r1-1776 'Fun facts about seals'
 ```
 
 ### Advanced Options
@@ -78,6 +74,31 @@ llm -m sonar-pro --option search_type auto 'Compare the energy efficiency of pop
 
 # Suppress citations section and discourage inline [n] markers
 llm -m sonar-pro --option include_citations false 'Latest AI research in 2025'
+
+# Search mode: web (default), academic, or sec (SEC filings)
+llm -m sonar-pro --option search_mode academic 'Recent papers on transformer architectures'
+llm -m sonar-pro --option search_mode sec 'Apple quarterly earnings'
+
+# Disable web search entirely
+llm -m sonar-pro --option disable_search true 'What is the capital of France?'
+
+# Filter search results by recency (hour, day, week, month, year)
+llm -m sonar-pro --option search_recency_filter year 'Major events'
+
+# Filter search results by language
+llm -m sonar-pro --option search_language_filter en 'Latest tech news'
+
+# Control reasoning effort (minimal, low, medium, high)
+llm -m sonar-reasoning-pro --option reasoning_effort high 'Solve this complex math problem'
+
+# Include images in results
+llm -m sonar-pro --option return_images true 'Show me the Eiffel Tower'
+
+# Set output language preference
+llm -m sonar-pro --option language_preference es 'Tell me about AI'
+
+# Stop sequences
+llm -m sonar-pro --option stop 'END' 'Generate a list'
 ```
 
 ### Using Images with Perplexity
