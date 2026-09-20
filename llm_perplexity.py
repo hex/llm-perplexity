@@ -343,12 +343,14 @@ class Perplexity(llm.Model):
             api_key = llm.get_key("openrouter", "LLM_OPENROUTER_KEY")
             base_url = "https://openrouter.ai/api/v1"
             model_id = f"perplexity/{self.model_id}"
+            default_headers = None
         else:
             api_key = self.get_key()
             base_url = self.base_url
             model_id = self.model_id
+            default_headers = {"X-Pplx-Integration": "llm-perplexity"}
 
-        client = OpenAI(api_key=api_key, base_url=base_url)
+        client = OpenAI(api_key=api_key, base_url=base_url, default_headers=default_headers)
 
         kwargs = {
             "model": model_id,
