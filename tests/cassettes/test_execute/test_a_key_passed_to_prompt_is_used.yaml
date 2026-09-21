@@ -41,58 +41,67 @@ interactions:
     uri: https://api.perplexity.ai/v1/responses
   response:
     body:
-      string: !!binary |
-        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
-        JpCD+41vtqYMSXblmhy9/93/ADKzbOwGHAAA
+      string: "{\"background\":false,\"completed_at\":1789990398,\"created_at\":1789990398,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_742872b0-b9e1-480c-987a-69b131b00428\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"openai/gpt-5.6-luna\",\"object\":\"response\",\"output\":[{\"queries\":[\"What
+        is the capital of France? One word.\"],\"results\":[{\"date\":\"2001-11-06\",\"id\":1,\"last_updated\":\"2026-09-21\",\"snippet\":\"**Paris**
+        is the capital and largest city of France, with an estimated city population
+        of 2.04 million in an area of 105.4 km^2^ (40.7 sq mi), as of January 2026,
+        and a metropolitan population of 13.3 million (2023).\\n...\\nAs the capital
+        of France, Paris is the seat of France's national government.\",\"source\":\"web\",\"title\":\"Paris
+        - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/Paris\"},{\"date\":\"2026-06-10\",\"id\":2,\"last_updated\":\"2026-06-11\",\"snippet\":\"**France**,
+        country of northwestern Europe.\\n...\\n- **Capital:**\\nParis\\n- **Population:**\\n...\\n-
+        **Currency Exchange Rate:**\\n...\\n- **Head Of State:**\\n...\\nThe capital
+        and by far the most important city of France is Paris, one of the world\u2019s
+        preeminent cultural and commercial centres.\",\"source\":\"web\",\"title\":\"France
+        | History, Maps, Flag, Population, Cities, Capital, \\u0026 ...\",\"url\":\"https://www.britannica.com/place/France\"},{\"date\":\"2026-06-05\",\"id\":3,\"last_updated\":\"2026-06-11\",\"snippet\":\"#
+        Paris\\nnational capital, France\\nQuick Summary\\n...\\n### Paris is the
+        capital of what country?\\nParis is the national capital of France.\\n**Paris**,
+        city and capital of France, situated in the north-central part of the country.\",\"source\":\"web\",\"title\":\"Paris
+        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"date\":\"2018-06-29\",\"id\":4,\"last_updated\":\"2026-09-19\",\"snippet\":\"Paris
+        is the capital city of France.\\n...\\nAs the capital city of France, the
+        city plays host to the national government of France.\",\"source\":\"web\",\"title\":\"What
+        is the Capital of France?\",\"url\":\"https://www.worldatlas.com/articles/what-is-the-capital-of-france.html\"},{\"id\":5,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n###
+        Capital City\\n- **Capital Name**\\nParis\\n- **Capital - geographic coordinate**\\n48
+        52 N, 2 20 E\\n- **Capital Time Difference**\\nUTC+1 (6 hours ahead of Washington,
+        DC, during Standard Time) time zone note: applies to metropolitan France only;
+        for its overseas regions the time difference is UTC-4 for Guadeloupe and Martinique,
+        UTC-3 for French Guiana, UTC+3 for Mayotte, and UTC+4 for Reunion\\n...\\nWhat
+        is the capital of France?\\n**Paris** is the capital of France and by far
+        its most populous and influential city.\",\"source\":\"web\",\"title\":\"France
+        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"date\":\"2003-01-15\",\"id\":6,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
+        is a chronological list of capitals of France.\\nThe capital of France has
+        been Paris since its liberation in 1944.\\n...\\n- Paris (1945\u2013present
+        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2018-08-13\",\"id\":7,\"last_updated\":\"2026-08-26\",\"snippet\":\"Paris
+        is synonymous with all that is French.\\n...\\n**PARIS** , capital of *France.\\n...\\n**Paris**
+        Capital of France, on the River Seine.\",\"source\":\"web\",\"title\":\"Paris\",\"url\":\"https://www.encyclopedia.com/places/britain-ireland-france-and-low-countries/french-political-geography/paris\"},{\"date\":\"2026-01-22\",\"id\":8,\"last_updated\":\"2026-05-07\",\"snippet\":\"Paris
+        is the capital of France, a major European city where history, culture, and
+        modern life meet along the Seine River.\\n...\\nParis is located in north-central
+        France, within the \xCEle-de-France region, along a gentle bend of the Seine
+        River.\\n...\\nParis serves as the capital of France and the center of modern
+        governance, home to the President at the \xC9lys\xE9e Palace, the Prime Minister
+        at the H\xF4tel Matignon, and Parliament\u2019s two chambers.\",\"source\":\"web\",\"title\":\"Capital
+        of France | Paris Travel Guide, Facts \\u0026 Highlights - SimCornersimcorner.com
+        \u203A blogs \u203A travel-guides \u203A capital-of-france\",\"url\":\"https://simcorner.com/blogs/travel-guides/capital-of-france\"},{\"id\":9,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
+        France\\n## Paris facts: Paris, the capital of France\\nParis is the **capital
+        of France**, the largest country of Europe with 550 000 km2 (65 millions inhabitants).\\n...\\nParis
+        remained the capital of\\nFrance until today, with one four year interruption.\",\"source\":\"web\",\"title\":\"Paris
+        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2026-02-23\",\"id\":10,\"last_updated\":\"2026-03-06\",\"snippet\":\"This
+        is Paris, a city that has served as the beating heart of France for well over
+        a thousand years.\\nIts role as the national capital is so deeply woven into
+        global consciousness that the word \\\"Paris\\\" has become almost synonymous
+        with France itself, yet the story of how and why this particular city rose
+        to such prominence is richer and more layered than most people realize.\\nTL;DR:
+        The capital city of France is Paris.\\nIt has held this status for centuries,
+        evolving from a small settlement on the Seine into one of the most influential
+        political, cultural, and economic centers on Earth.\\nParis is home to the
+        French government, major international organizations, and a population of
+        over two million within the city proper, with more than twelve million in
+        the greater metropolitan area.\\n...\\nWhatever challenges arise, the fundamental
+        answer to the question remains as stable as the limestone foundations beneath
+        the city's streets.\\nParis is, and for the foreseeable future will remain,
+        the capital of France.\\n## Key takeaways\\n- Paris is the capital city of
+        France, a status it has held in various forms since the early sixth century
+        CE.\",\"source\":\"web\",\"title\":\"What is the Capital of France? History
+        \\u0026 Facts About Paris\",\"url\":\"https://asmr.education/faq/france/capital-of-france-paris\"}],\"type\":\"search_results\"},{\"content\":[{\"annotations\":[],\"text\":\"Paris\",\"type\":\"output_text\"}],\"id\":\"msg_ccddca6a-5f04-4642-9480-0304213ccf32\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"priority\",\"status\":\"completed\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":{\"cost\":{\"cache_read_cost\":0.00012,\"currency\":\"USD\",\"input_cost\":0,\"output_cost\":0.00001,\"tool_calls_cost\":0.0025,\"tool_calls_cost_details\":{\"search_web\":0.0025},\"total_cost\":0.00263},\"input_tokens\":3115,\"input_tokens_details\":{\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":3112,\"cached_tokens\":3112},\"output_tokens\":5,\"output_tokens_details\":{\"reasoning_tokens\":0},\"tool_calls_details\":{\"search_web\":{\"cost_usd\":0.0025,\"invocation\":1}},\"total_tokens\":3120},\"user\":null}\n"
     headers:
       access-control-allow-origin:
       - '*'
@@ -100,38 +109,20 @@ interactions:
       - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      cf-ray:
-      - a3e8bfc86f86e3e9-OTP
       connection:
       - keep-alive
-      content-encoding:
-      - gzip
+      content-length:
+      - '7173'
       content-type:
       - application/json
       date:
-      - Mon, 21 Sep 2026 11:32:26 GMT
+      - Mon, 21 Sep 2026 11:33:19 GMT
       server:
       - cloudflare
-      set-cookie:
-      - __cf_bm=YEub3h2HHnTa0JRoKoAaCblvM6NKkpV.2N6H655zOWQ-1789990345.0328808-1.0.1.1-eIYeX1H0rnuLWCu6DOFlgLDm9MSw3kbFw3QNP8m2iLEcVpooz5dmGMajHtD48U4Rkf2p5Sr5SEcpeMHkeSH4EBVf3IqRGnf7EqBKlC1P2aBWA9XprL6XF9ObLUCDI3Ui;
-        HttpOnly; SameSite=None; Secure; Path=/; Domain=perplexity.ai; Expires=Mon,
-        21 Sep 2026 12:02:26 GMT
-      - __cflb=04dToWaRite5R1fQA5HfyWsXiTjNxDHjTbGRRCeGE9; HttpOnly; SameSite=None;
-        Secure; Path=/; Expires=Mon, 21 Sep 2026 12:02:26 GMT
       strict-transport-security:
       - max-age=15552000; includeSubDomains; preload
       transfer-encoding:
       - chunked
-      x-ratelimit-limit:
-      - '1'
-      x-ratelimit-remaining:
-      - '0'
-      x-ratelimit-reset:
-      - '1789990347'
-      x-ratelimit-used:
-      - '1'
-      x-request-id:
-      - c5b71239-c42e-405a-99c6-0642855e1eca
     status:
       code: 200
       message: OK

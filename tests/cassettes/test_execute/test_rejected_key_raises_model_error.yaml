@@ -51,22 +51,14 @@ interactions:
       - h3=":443"; ma=86400
       cf-cache-status:
       - DYNAMIC
-      cf-ray:
-      - a3e85e5228b5e59e-OTP
       connection:
       - keep-alive
       content-type:
       - application/json
       date:
-      - Mon, 21 Sep 2026 10:25:53 GMT
+      - Mon, 21 Sep 2026 11:33:17 GMT
       server:
       - cloudflare
-      set-cookie:
-      - __cf_bm=lYi_.vKuQBxmopBdubUGDAguG_M_vcth3c4JvhwCM2o-1789986352.989511-1.0.1.1-LOiYeUfC.d4ROXuRf2z6iX7GA5YefLXsfLUS44yI.AFhMu4h7L8.jaIf6uitYK9zrx02fp68Csl7mKnl1j6VnxLlFJoDwJlIGOMvgE34gBmV7izfGFAB5icGeYUbaiyh;
-        HttpOnly; SameSite=None; Secure; Path=/; Domain=perplexity.ai; Expires=Mon,
-        21 Sep 2026 10:55:53 GMT
-      - __cflb=04dToWaRite5R1fQA5HfyWsXiTjNxDHfRazC4gCG3w; HttpOnly; SameSite=None;
-        Secure; Path=/; Expires=Mon, 21 Sep 2026 10:55:53 GMT
       strict-transport-security:
       - max-age=15552000; includeSubDomains; preload
       transfer-encoding:

@@ -41,14 +41,14 @@ interactions:
     uri: https://api.perplexity.ai/v1/responses
   response:
     body:
-      string: "event: response.created\ndata: {\"response\":{\"background\":false,\"completed_at\":null,\"created_at\":1789986346,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_7b57af9e-b7f9-4dbc-8792-13c41be438c8\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"fast\",\"object\":\"response\",\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"default\",\"status\":\"in_progress\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":null,\"user\":null},\"sequence_number\":0,\"type\":\"response.created\"}\n\nevent:
-        response.in_progress\ndata: {\"response\":{\"background\":false,\"completed_at\":null,\"created_at\":1789986346,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_7b57af9e-b7f9-4dbc-8792-13c41be438c8\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"fast\",\"object\":\"response\",\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"default\",\"status\":\"in_progress\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":null,\"user\":null},\"sequence_number\":1,\"type\":\"response.in_progress\"}\n\nevent:
+      string: "event: response.created\ndata: {\"response\":{\"background\":false,\"completed_at\":null,\"created_at\":1789990391,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_d8f8a27c-dd9b-4767-a08e-804207c8ba5a\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"fast\",\"object\":\"response\",\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"default\",\"status\":\"in_progress\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":null,\"user\":null},\"sequence_number\":0,\"type\":\"response.created\"}\n\nevent:
+        response.in_progress\ndata: {\"response\":{\"background\":false,\"completed_at\":null,\"created_at\":1789990391,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_d8f8a27c-dd9b-4767-a08e-804207c8ba5a\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"fast\",\"object\":\"response\",\"output\":[],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"default\",\"status\":\"in_progress\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":null,\"user\":null},\"sequence_number\":1,\"type\":\"response.in_progress\"}\n\nevent:
         response.output_item.added\ndata: {\"item\":{\"arguments\":\"{\\\"queries\\\":[\\\"What
-        is the capital of France? One sentence.\\\"]}\",\"call_id\":\"call_d5bc2914-4e8e-490f-890e-8bb5e7605a9a\",\"id\":\"fc_e064596c-9d16-481c-b401-ed9746cfb5c7\",\"name\":\"search_web\",\"status\":\"completed\",\"type\":\"function_call\"},\"output_index\":0,\"sequence_number\":3,\"type\":\"response.output_item.added\"}\n\nevent:
-        response.reasoning.search_queries\ndata: {\"call_id\":\"call_d5bc2914-4e8e-490f-890e-8bb5e7605a9a\",\"queries\":[\"What
+        is the capital of France? One sentence.\\\"]}\",\"call_id\":\"call_7e732bd7-f25f-435a-ba8a-2a4fdd269ab6\",\"id\":\"fc_089adb9a-c453-4ccc-820d-f4791f29bbdf\",\"name\":\"search_web\",\"status\":\"completed\",\"type\":\"function_call\"},\"output_index\":0,\"sequence_number\":3,\"type\":\"response.output_item.added\"}\n\nevent:
+        response.reasoning.search_queries\ndata: {\"call_id\":\"call_7e732bd7-f25f-435a-ba8a-2a4fdd269ab6\",\"queries\":[\"What
         is the capital of France? One sentence.\"],\"sequence_number\":4,\"thought\":\"Searching
         the web...\",\"type\":\"response.reasoning.search_queries\"}\n\nevent: response.reasoning.search_results\ndata:
-        {\"call_id\":\"call_d5bc2914-4e8e-490f-890e-8bb5e7605a9a\",\"results\":[{\"date\":\"2001-11-06\",\"id\":1,\"last_updated\":\"2026-09-21\",\"snippet\":\"**Paris**
+        {\"call_id\":\"call_7e732bd7-f25f-435a-ba8a-2a4fdd269ab6\",\"results\":[{\"date\":\"2001-11-06\",\"id\":1,\"last_updated\":\"2026-09-21\",\"snippet\":\"**Paris**
         is the capital and largest city of France, with an estimated city population
         of 2.04 million in an area of 105.4 km^2^ (40.7 sq mi), as of January 2026,
         and a metropolitan population of 13.3 million (2023).\\n...\\n|Paris|Paris|\\n...\\nAs
@@ -65,28 +65,32 @@ interactions:
         Paris\\nnational capital, France\\nQuick Summary\\n...\\n### Paris is the
         capital of what country?\\nParis is the national capital of France.\\n**Paris**,
         city and capital of France, situated in the north-central part of the country.\",\"source\":\"web\",\"title\":\"Paris
-        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"id\":5,\"last_updated\":\"2026-04-12\",\"snippet\":\"Capital
-        of: **Paris**\\nParis is the capital of France; it\u2019s where the president
-        resides at the \xC9lys\xE9e Palace and where Parliament (National Assembly
-        and Senate) meets, making it the country\u2019s political heart.\",\"source\":\"web\",\"title\":\"Paris
-        - Capital of France\",\"url\":\"https://world-capitals.org/en/capitals-capital_france/\"},{\"date\":\"2003-01-15\",\"id\":6,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
+        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"date\":\"2003-01-15\",\"id\":5,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
         is a chronological list of capitals of France.\\nThe capital of France has
         been Paris since its liberation in 1944.\\n...\\n- Paris (1945\u2013present
-        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2025-10-06\",\"id\":7,\"last_updated\":\"2025-10-07\",\"snippet\":\"Paris,
+        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2025-10-06\",\"id\":6,\"last_updated\":\"2025-10-07\",\"snippet\":\"Paris,
         the capital of France, is located in the north-central portion of the country.\",\"source\":\"web\",\"title\":\"Paris
-        Facts\",\"url\":\"https://www.britannica.com/facts/Paris\"},{\"id\":8,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n-
+        Facts\",\"url\":\"https://www.britannica.com/facts/Paris\"},{\"id\":7,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n-
         **Capital Name**\\nParis\\n- **Capital - geographic coordinate**\\n48 52 N,
         2 20 E\\n- **Capital Time Difference**\\n...\\nThe population of France is
         approximately 68.4M.\\nWhat is the capital of France?\\n**Paris** is the capital
         of France and by far its most populous and influential city.\",\"source\":\"web\",\"title\":\"France
-        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"id\":9,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
+        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"id\":8,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
         France\\n## Paris facts: Paris, the capital of France\\nParis is the **capital
         of France**, the largest country of Europe with 550 000 km2 (65 millions inhabitants).\\n...\\nParis
         remained the capital of\\nFrance until today, with one four year interruption.\",\"source\":\"web\",\"title\":\"Paris
-        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2024-09-12\",\"id\":10,\"last_updated\":\"2026-09-17\",\"snippet\":\"Paris
+        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2024-09-12\",\"id\":9,\"last_updated\":\"2026-09-17\",\"snippet\":\"Paris
         is the capital city of France and a cultural and culinary hub.\\nIn 2024 it
         played host to its third Olympic Games.\",\"source\":\"web\",\"title\":\"Five
-        interesting facts about Paris you need to know!\",\"url\":\"https://www.bbc.co.uk/bitesize/articles/z6cjfdm\"}],\"sequence_number\":5,\"thought\":\"Found
+        interesting facts about Paris you need to know!\",\"url\":\"https://www.bbc.co.uk/bitesize/articles/z6cjfdm\"},{\"date\":\"2021-01-31\",\"id\":10,\"last_updated\":\"2026-07-20\",\"snippet\":\"Paris
+        is the capital of France.\\nAlso known as the \u201CCity of Light,\u201D is
+        not only the capital but also the most populous city of France.\\n...\\nHowever,
+        Paris only became the official capital of France during the reign of Clovis
+        I, in the late 5th and early 6th century.\\nBefore Clovis, the Merovingian
+        kings did not rule from a fixed capital, but Clovis established his court
+        in Paris, effectively making it the capital.\\nSince then, with some interruptions,
+        Paris has remained the capital of France.\",\"source\":\"web\",\"title\":\"What
+        is the Capital of France? - Mappr\",\"url\":\"https://www.mappr.co/capital-cities/france/\"}],\"sequence_number\":5,\"thought\":\"Found
         10 results\",\"type\":\"response.reasoning.search_results\"}\n\nevent: response.output_item.done\ndata:
         {\"item\":{\"queries\":[\"What is the capital of France? One sentence.\"],\"results\":[{\"date\":\"2001-11-06\",\"id\":1,\"last_updated\":\"2026-09-21\",\"snippet\":\"**Paris**
         is the capital and largest city of France, with an estimated city population
@@ -105,43 +109,47 @@ interactions:
         Paris\\nnational capital, France\\nQuick Summary\\n...\\n### Paris is the
         capital of what country?\\nParis is the national capital of France.\\n**Paris**,
         city and capital of France, situated in the north-central part of the country.\",\"source\":\"web\",\"title\":\"Paris
-        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"id\":5,\"last_updated\":\"2026-04-12\",\"snippet\":\"Capital
-        of: **Paris**\\nParis is the capital of France; it\u2019s where the president
-        resides at the \xC9lys\xE9e Palace and where Parliament (National Assembly
-        and Senate) meets, making it the country\u2019s political heart.\",\"source\":\"web\",\"title\":\"Paris
-        - Capital of France\",\"url\":\"https://world-capitals.org/en/capitals-capital_france/\"},{\"date\":\"2003-01-15\",\"id\":6,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
+        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"date\":\"2003-01-15\",\"id\":5,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
         is a chronological list of capitals of France.\\nThe capital of France has
         been Paris since its liberation in 1944.\\n...\\n- Paris (1945\u2013present
-        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2025-10-06\",\"id\":7,\"last_updated\":\"2025-10-07\",\"snippet\":\"Paris,
+        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2025-10-06\",\"id\":6,\"last_updated\":\"2025-10-07\",\"snippet\":\"Paris,
         the capital of France, is located in the north-central portion of the country.\",\"source\":\"web\",\"title\":\"Paris
-        Facts\",\"url\":\"https://www.britannica.com/facts/Paris\"},{\"id\":8,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n-
+        Facts\",\"url\":\"https://www.britannica.com/facts/Paris\"},{\"id\":7,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n-
         **Capital Name**\\nParis\\n- **Capital - geographic coordinate**\\n48 52 N,
         2 20 E\\n- **Capital Time Difference**\\n...\\nThe population of France is
         approximately 68.4M.\\nWhat is the capital of France?\\n**Paris** is the capital
         of France and by far its most populous and influential city.\",\"source\":\"web\",\"title\":\"France
-        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"id\":9,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
+        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"id\":8,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
         France\\n## Paris facts: Paris, the capital of France\\nParis is the **capital
         of France**, the largest country of Europe with 550 000 km2 (65 millions inhabitants).\\n...\\nParis
         remained the capital of\\nFrance until today, with one four year interruption.\",\"source\":\"web\",\"title\":\"Paris
-        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2024-09-12\",\"id\":10,\"last_updated\":\"2026-09-17\",\"snippet\":\"Paris
+        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2024-09-12\",\"id\":9,\"last_updated\":\"2026-09-17\",\"snippet\":\"Paris
         is the capital city of France and a cultural and culinary hub.\\nIn 2024 it
         played host to its third Olympic Games.\",\"source\":\"web\",\"title\":\"Five
-        interesting facts about Paris you need to know!\",\"url\":\"https://www.bbc.co.uk/bitesize/articles/z6cjfdm\"}],\"type\":\"search_results\"},\"output_index\":0,\"sequence_number\":6,\"type\":\"response.output_item.done\"}\n\nevent:
-        response.output_item.added\ndata: {\"item\":{\"content\":null,\"id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"},\"output_index\":1,\"sequence_number\":7,\"type\":\"response.output_item.added\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\"The\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":8,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" capital\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":9,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" of\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":10,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" France\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":11,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" is\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":12,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" Paris\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":13,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\".[\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":14,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\"1\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":15,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\"]\",\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":16,\"type\":\"response.output_text.delta\"}\n\nevent:
-        response.output_text.done\ndata: {\"content_index\":0,\"item_id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"output_index\":1,\"sequence_number\":18,\"text\":\"The
-        capital of France is Paris.[1]\",\"type\":\"response.output_text.done\"}\n\nevent:
-        response.output_item.done\ndata: {\"item\":{\"content\":[{\"annotations\":[],\"text\":\"The
-        capital of France is Paris.[1]\",\"type\":\"output_text\"}],\"id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"},\"output_index\":1,\"sequence_number\":19,\"type\":\"response.output_item.done\"}\n\nevent:
-        response.completed\ndata: {\"response\":{\"background\":false,\"completed_at\":1789986346,\"created_at\":1789986346,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_7b57af9e-b7f9-4dbc-8792-13c41be438c8\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"openai/gpt-5.6-luna\",\"object\":\"response\",\"output\":[{\"queries\":[\"What
+        interesting facts about Paris you need to know!\",\"url\":\"https://www.bbc.co.uk/bitesize/articles/z6cjfdm\"},{\"date\":\"2021-01-31\",\"id\":10,\"last_updated\":\"2026-07-20\",\"snippet\":\"Paris
+        is the capital of France.\\nAlso known as the \u201CCity of Light,\u201D is
+        not only the capital but also the most populous city of France.\\n...\\nHowever,
+        Paris only became the official capital of France during the reign of Clovis
+        I, in the late 5th and early 6th century.\\nBefore Clovis, the Merovingian
+        kings did not rule from a fixed capital, but Clovis established his court
+        in Paris, effectively making it the capital.\\nSince then, with some interruptions,
+        Paris has remained the capital of France.\",\"source\":\"web\",\"title\":\"What
+        is the Capital of France? - Mappr\",\"url\":\"https://www.mappr.co/capital-cities/france/\"}],\"type\":\"search_results\"},\"output_index\":0,\"sequence_number\":6,\"type\":\"response.output_item.done\"}\n\nevent:
+        response.output_item.added\ndata: {\"item\":{\"content\":null,\"id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"},\"output_index\":1,\"sequence_number\":7,\"type\":\"response.output_item.added\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\"Paris\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":8,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" is\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":9,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" the\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":10,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" capital\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":11,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" of\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":12,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\" France\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":13,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\".[\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":14,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\"1\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":15,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.delta\ndata: {\"content_index\":0,\"delta\":\"]\",\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":16,\"type\":\"response.output_text.delta\"}\n\nevent:
+        response.output_text.done\ndata: {\"content_index\":0,\"item_id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"output_index\":1,\"sequence_number\":18,\"text\":\"Paris
+        is the capital of France.[1]\",\"type\":\"response.output_text.done\"}\n\nevent:
+        response.output_item.done\ndata: {\"item\":{\"content\":[{\"annotations\":[],\"text\":\"Paris
+        is the capital of France.[1]\",\"type\":\"output_text\"}],\"id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"},\"output_index\":1,\"sequence_number\":19,\"type\":\"response.output_item.done\"}\n\nevent:
+        response.completed\ndata: {\"response\":{\"background\":false,\"completed_at\":1789990391,\"created_at\":1789990391,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_d8f8a27c-dd9b-4767-a08e-804207c8ba5a\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"openai/gpt-5.6-luna\",\"object\":\"response\",\"output\":[{\"queries\":[\"What
         is the capital of France? One sentence.\"],\"results\":[{\"date\":\"2001-11-06\",\"id\":1,\"last_updated\":\"2026-09-21\",\"snippet\":\"**Paris**
         is the capital and largest city of France, with an estimated city population
         of 2.04 million in an area of 105.4 km^2^ (40.7 sq mi), as of January 2026,
@@ -159,29 +167,33 @@ interactions:
         Paris\\nnational capital, France\\nQuick Summary\\n...\\n### Paris is the
         capital of what country?\\nParis is the national capital of France.\\n**Paris**,
         city and capital of France, situated in the north-central part of the country.\",\"source\":\"web\",\"title\":\"Paris
-        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"id\":5,\"last_updated\":\"2026-04-12\",\"snippet\":\"Capital
-        of: **Paris**\\nParis is the capital of France; it\u2019s where the president
-        resides at the \xC9lys\xE9e Palace and where Parliament (National Assembly
-        and Senate) meets, making it the country\u2019s political heart.\",\"source\":\"web\",\"title\":\"Paris
-        - Capital of France\",\"url\":\"https://world-capitals.org/en/capitals-capital_france/\"},{\"date\":\"2003-01-15\",\"id\":6,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
+        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"date\":\"2003-01-15\",\"id\":5,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
         is a chronological list of capitals of France.\\nThe capital of France has
         been Paris since its liberation in 1944.\\n...\\n- Paris (1945\u2013present
-        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2025-10-06\",\"id\":7,\"last_updated\":\"2025-10-07\",\"snippet\":\"Paris,
+        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2025-10-06\",\"id\":6,\"last_updated\":\"2025-10-07\",\"snippet\":\"Paris,
         the capital of France, is located in the north-central portion of the country.\",\"source\":\"web\",\"title\":\"Paris
-        Facts\",\"url\":\"https://www.britannica.com/facts/Paris\"},{\"id\":8,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n-
+        Facts\",\"url\":\"https://www.britannica.com/facts/Paris\"},{\"id\":7,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n-
         **Capital Name**\\nParis\\n- **Capital - geographic coordinate**\\n48 52 N,
         2 20 E\\n- **Capital Time Difference**\\n...\\nThe population of France is
         approximately 68.4M.\\nWhat is the capital of France?\\n**Paris** is the capital
         of France and by far its most populous and influential city.\",\"source\":\"web\",\"title\":\"France
-        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"id\":9,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
+        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"id\":8,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
         France\\n## Paris facts: Paris, the capital of France\\nParis is the **capital
         of France**, the largest country of Europe with 550 000 km2 (65 millions inhabitants).\\n...\\nParis
         remained the capital of\\nFrance until today, with one four year interruption.\",\"source\":\"web\",\"title\":\"Paris
-        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2024-09-12\",\"id\":10,\"last_updated\":\"2026-09-17\",\"snippet\":\"Paris
+        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2024-09-12\",\"id\":9,\"last_updated\":\"2026-09-17\",\"snippet\":\"Paris
         is the capital city of France and a cultural and culinary hub.\\nIn 2024 it
         played host to its third Olympic Games.\",\"source\":\"web\",\"title\":\"Five
-        interesting facts about Paris you need to know!\",\"url\":\"https://www.bbc.co.uk/bitesize/articles/z6cjfdm\"}],\"type\":\"search_results\"},{\"content\":[{\"annotations\":[],\"text\":\"The
-        capital of France is Paris.[1]\",\"type\":\"output_text\"}],\"id\":\"msg_250e7d5b-0dbb-4d36-8394-f56362e1791f\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"priority\",\"status\":\"completed\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":{\"cost\":{\"cache_read_cost\":0.00011,\"currency\":\"USD\",\"input_cost\":0,\"output_cost\":0.00003,\"tool_calls_cost\":0.0025,\"tool_calls_cost_details\":{\"search_web\":0.0025},\"total_cost\":0.00264},\"input_tokens\":2754,\"input_tokens_details\":{\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":2751,\"cached_tokens\":2751},\"output_tokens\":13,\"output_tokens_details\":{\"reasoning_tokens\":0},\"tool_calls_details\":{\"search_web\":{\"cost_usd\":0.0025,\"invocation\":1}},\"total_tokens\":2767},\"user\":null},\"sequence_number\":20,\"type\":\"response.completed\"}\n\n"
+        interesting facts about Paris you need to know!\",\"url\":\"https://www.bbc.co.uk/bitesize/articles/z6cjfdm\"},{\"date\":\"2021-01-31\",\"id\":10,\"last_updated\":\"2026-07-20\",\"snippet\":\"Paris
+        is the capital of France.\\nAlso known as the \u201CCity of Light,\u201D is
+        not only the capital but also the most populous city of France.\\n...\\nHowever,
+        Paris only became the official capital of France during the reign of Clovis
+        I, in the late 5th and early 6th century.\\nBefore Clovis, the Merovingian
+        kings did not rule from a fixed capital, but Clovis established his court
+        in Paris, effectively making it the capital.\\nSince then, with some interruptions,
+        Paris has remained the capital of France.\",\"source\":\"web\",\"title\":\"What
+        is the Capital of France? - Mappr\",\"url\":\"https://www.mappr.co/capital-cities/france/\"}],\"type\":\"search_results\"},{\"content\":[{\"annotations\":[],\"text\":\"Paris
+        is the capital of France.[1]\",\"type\":\"output_text\"}],\"id\":\"msg_1759e1fc-a460-4719-bd67-24162d4a0eb3\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"priority\",\"status\":\"completed\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":{\"cost\":{\"cache_read_cost\":0.00011,\"currency\":\"USD\",\"input_cost\":0,\"output_cost\":0.00003,\"tool_calls_cost\":0.0025,\"tool_calls_cost_details\":{\"search_web\":0.0025},\"total_cost\":0.00264},\"input_tokens\":2830,\"input_tokens_details\":{\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":2827,\"cached_tokens\":2827},\"output_tokens\":13,\"output_tokens_details\":{\"reasoning_tokens\":0},\"tool_calls_details\":{\"search_web\":{\"cost_usd\":0.0025,\"invocation\":1}},\"total_tokens\":2843},\"user\":null},\"sequence_number\":20,\"type\":\"response.completed\"}\n\n"
     headers:
       access-control-allow-origin:
       - '*'
@@ -191,36 +203,18 @@ interactions:
       - no-cache
       cf-cache-status:
       - DYNAMIC
-      cf-ray:
-      - a3e85e2b0e12e466-OTP
       connection:
       - keep-alive
       content-type:
       - text/event-stream
       date:
-      - Mon, 21 Sep 2026 10:25:46 GMT
+      - Mon, 21 Sep 2026 11:33:11 GMT
       server:
       - cloudflare
-      set-cookie:
-      - __cf_bm=StSGVZf8HagIgGEYqWGETHOK7P3Z8f4wel76qLT026Y-1789986346.7259026-1.0.1.1-chn.fftR8Hqfw9XxK3.Kv2TcIe8BiVYZPYyIYjV38ApbSz54zFmmvfDYIDsF0f3ssl.0wKWRzPMYUbDpHF.0h1guPHwBULFxZKokfncV0Q79c.t8X9fqlkd.3Jdh92p6;
-        HttpOnly; SameSite=None; Secure; Path=/; Domain=perplexity.ai; Expires=Mon,
-        21 Sep 2026 10:55:46 GMT
-      - __cflb=04dToWaRite5R1fQA5HfyWsXiTjNxDHeFgH6Qwk1BK; HttpOnly; SameSite=None;
-        Secure; Path=/; Expires=Mon, 21 Sep 2026 10:55:46 GMT
       strict-transport-security:
       - max-age=15552000; includeSubDomains; preload
       transfer-encoding:
       - chunked
-      x-ratelimit-limit:
-      - '1'
-      x-ratelimit-remaining:
-      - '0'
-      x-ratelimit-reset:
-      - '1789986347'
-      x-ratelimit-used:
-      - '1'
-      x-request-id:
-      - 7b57af9e-b7f9-4dbc-8792-13c41be438c8
     status:
       code: 200
       message: OK

@@ -147,3 +147,21 @@ def test_a_key_passed_to_prompt_is_used(monkeypatch):
         key=os.environ.get("PERPLEXITY_API_KEY", "pplx-test-key"),
     )
     assert "Paris" in response.text()
+
+
+@pytest.mark.vcr
+def test_search_and_generation_options_are_accepted_by_the_api():
+    response = llm.get_model("sonar").prompt(
+        "What is new in the llm CLI? One sentence.",
+        stream=False,
+        search_context_size="low",
+        search_domain_filter="simonwillison.net",
+        search_recency_filter="year",
+        reasoning_effort="low",
+        max_tokens=200,
+    )
+    response.text()
+    assert response.response_json["status"] == "completed"
+    sources = search_results(response.response_json)
+    assert sources
+    assert all("simonwillison.net" in source["url"] for source in sources)

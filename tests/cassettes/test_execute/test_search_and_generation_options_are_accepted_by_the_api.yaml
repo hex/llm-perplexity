@@ -1,0 +1,207 @@
+interactions:
+- request:
+    body: '{"input":[{"role":"user","content":"What is new in the llm CLI? One sentence."}],"max_output_tokens":200,"reasoning":{"effort":"low"},"stream":false,"tools":[{"type":"web_search","search_context_size":"low","filters":{"search_domain_filter":["simonwillison.net"],"search_recency_filter":"year"}}],"preset":"fast"}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '313'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 3.16.2
+      x-pplx-integration:
+      - llm-perplexity/2026.9.0
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 3.16.2
+      x-stainless-read-timeout:
+      - '600'
+      x-stainless-retry-count:
+      - '0'
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.9
+    method: POST
+    uri: https://api.perplexity.ai/v1/responses
+  response:
+    body:
+      string: "{\"background\":false,\"completed_at\":1789990399,\"created_at\":1789990399,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_86ef702f-9407-4aec-9c27-545415a5702f\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":200,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"openai/gpt-5.6-luna\",\"object\":\"response\",\"output\":[{\"queries\":[\"What
+        is new in the llm CLI? One sentence.\"],\"results\":[{\"date\":\"2026-04-29\",\"id\":1,\"last_updated\":\"2026-09-20\",\"snippet\":\"I
+        just released LLM 0.32a0, an alpha release of my LLM Python library and CLI
+        tool for accessing LLMs, with some consequential changes that I\u2019ve been
+        working towards for quite a while.\\n...\\nThe 0.32a0 alpha has two key changes:
+        model inputs can be represented as a sequence of messages, and model responses
+        can be composed of a stream of differently typed parts.\\n...\\nThe other
+        major new interface in the alpha concerns streaming results back from a prompt.\\n...\\nThis
+        new mechanism for streaming different token types means the CLI tool can now
+        display \u201Cthinking\u201D text in a different color from the text in the
+        final response.\\nThe thinking text goes to stderr so it won\u2019t affect
+        results that are piped into other tools.\\n...\\nYou can suppress the output
+        of reasoning tokens using the new `-R/--no-reasoning` flag.\",\"source\":\"web\",\"title\":\"LLM
+        0.32a0 is a major backwards-compatible refactor\",\"url\":\"https://simonwillison.net/2026/Apr/29/llm/\"},{\"date\":\"2026-08-04\",\"id\":2,\"last_updated\":\"2026-09-13\",\"snippet\":\"##
+        New release of LLM adds support for reasoning traces, OpenAI Responses, server-side
+        tools, and smarter logging\\n...\\nI released LLM 0.32 this morning, the most
+        significant new version of LLM since the initial launch of the project.\\nThe
+        new version includes support for visible reasoning traces, server-side provider
+        tools, redesigned content-addressable SQLite logs, new models, and new features
+        enabled by the OpenAI Responses API.\\nI also released a new version of the
+        llm-anthropic plugin with substantial updates of its own.\\n...\\nRunning
+        LLM against reasoning models now **displays their reasoning traces** to standard
+        error, so you can see what they are \u201Cthinking\u201D without that information
+        being included in the standard output that you might pipe to another tool.\\nAdd
+        `-R/--hide-reasoning` to turn this off.\\nLLM includes support out-of-the-box
+        for the **GPT-5.6 model family**, and the new default model used with `llm
+        \\\"prompt\\\"` is now the inexpensive but capable **GPT-5.6 Luna**.\\nLLM
+        calls can now use **server-side tools** from various providers.\\n...\\nThe
+        llm-anthropic plugin adds WebSearch, WebFetch, CodeExecution, and AnthropicMCP,
+        which looks like this:\\n...\\nThe new **llm openai endpoint** command provides
+        a tool for executing prompts against *any* OpenAI compatible endpoint as a
+        one-liner.\\nThese aren\u2019t logged, which makes this a handy tool for running
+        one-off prompts against anything that speaks the lingua franca of the LLM
+        API world.\\n...\\nYou can see the new schema for that in the documentation,
+        but the `llm logs` and `llm logs --json` commands have both been upgraded
+        to convert that format back into something that\u2019s easy to consume.\",\"source\":\"web\",\"title\":\"New
+        release of LLM adds support for reasoning traces, OpenAI ...\",\"url\":\"https://simonwillison.net/2026/Aug/4/new-release-of-llm/\"},{\"date\":\"2026-08-22\",\"id\":3,\"last_updated\":\"2026-09-13\",\"snippet\":\"Release
+        llm 0.33 \u2014 Access large language models from the command-line\\nMy highlights
+        from this release:\\n\\u003e - Upgraded to the OpenAI Python library 3.x and
+        switched the HTTP client dependency from `httpx` to `httpx2`.\\n#1608, #1631\\nI
+        shipped a quick 0.32.1 fix for this yesterday, but this is the more comprehensive
+        fix.\\n\\u003e - `llm embed` and `llm embed-multi` now accept `--key`.\\nThe
+        Python `EmbeddingModel.embed()`, `EmbeddingModel.embed_multi()`, `Collection.embed()`
+        and `Collection.embed_multi()` methods accept `key=` too, passing the resolved
+        per-call key to embedding plugins without changing shared model state.\\nExisting
+        plugins that read `self.key` continue to work through a compatibility fallback.\\nThanks,
+        ChrisJr404.\\n...\\nThe embedding models now use the same pattern for keys
+        that regular LLM models do.\\n\\u003e - `llm prompt -t/--template` can now
+        be repeated to combine templates in order.\\nThis allows model configuration
+        and options from one template to be used with a prompt from another.\\n...\\n\\u003e
+        - Reasoning-capable Responses API models now support a `reasoning_summary`
+        option with `auto`, `concise`, and `detailed` values.\\nThis can be used with
+        llm openai endpoint --responses.\\n#1600\",\"source\":\"web\",\"title\":\"Release:
+        llm 0.33\",\"url\":\"https://simonwillison.net/2026/Aug/22/llm/\"},{\"date\":\"2026-08-24\",\"id\":4,\"last_updated\":\"2026-08-27\",\"snippet\":\"LLM
+        is my command-line tool for running prompts against Large Language Models.\\n...\\n\\u003e
+        - Upgraded to the OpenAI Python library 3.x and switched the HTTP client dependency
+        from `httpx` to `httpx2`.\\n...\\n\\u003e - `llm embed` and `llm embed-multi`
+        now accept `--key`.\\nThe Python `EmbeddingModel.embed()`, `EmbeddingModel.embed_multi()`,
+        `Collection.embed()` and `Collection.embed_multi()` methods accept `key=`
+        too, passing the resolved per-call key to embedding plugins without changing
+        shared model state.\\n...\\n\\u003e - `llm prompt -t/--template` can now be
+        repeated to combine templates in order.\\nThis allows model configuration
+        and options from one template to be used with a prompt from another.\\n...\\n\\u003e
+        - Reasoning-capable Responses API models now support a `reasoning_summary`
+        option with `auto`, `concise`, and `detailed` values.\\nThis can be used with
+        llm openai endpoint --responses.\\n#1600\\n...\\nThe new version includes
+        support for visible reasoning traces, server-side provider tools, redesigned
+        content-addressable SQLite logs, new models, and new features enabled by the
+        OpenAI Responses API.\",\"source\":\"web\",\"title\":\"Simon Willison on llm\",\"url\":\"https://simonwillison.net/tags/llm/?page\"},{\"date\":\"2026-07-30\",\"id\":5,\"last_updated\":\"2026-09-13\",\"snippet\":\"Release
+        llm 0.32rc2 \u2014 Access large language models from the command-line\\nHot
+        on the heels of RC1, this fixes a dependency issue and also adds two neat
+        new features:\\n...\\nThe default model for users who have not set their own
+        default is now GPT-5.6 Luna.\\nIt was previously GPT-4o mini.\\nLuna is a
+        much better and more recent model, albeit slightly more expensive - $0.20
+        per million input tokens and $1.20 per million output tokens, compared to
+        $0.15/$0.60 for 4o mini.\\nYou can switch back to 4o mini using `llm models
+        default gpt-4o-mini`, or switch to GPT-5 nano, an even cheaper default model
+        ($0.05/$0.40), using `llm models default gpt-5-nano`.\\n#1576\\n\\u003e -
+        New llm openai endpoint command for running prompts, chats and model listings
+        against arbitrary OpenAI-compatible endpoints without first configuring a
+        model.\\nThese calls are not logged.\\n#1565\\nThe `llm openai endpoint` command
+        is *really* cool.\\n...\\nYou don't even have to install LLM to use this.\\nHere's
+        a `uvx` one-liner for running a prompt - with tools - against an LM Studio
+        local model:\\n```\\nuvx --pre llm openai endpoint http://127.0.0.1:1234/v1
+        \\\\\\nT llm_version -T llm_time --td \\\\\\n-m google/gemma-4-31b 'what is
+        the current LLM version?\\nAnd the time?'\\n```\",\"source\":\"web\",\"title\":\"Release:
+        llm 0.32rc2\",\"url\":\"https://simonwillison.net/2026/Jul/30/llm-rc2/\"},{\"date\":\"2026-04-24\",\"id\":6,\"last_updated\":\"2026-09-13\",\"snippet\":\"Release
+        llm 0.31 \u2014 Access large language models from the command-line\\n\\u003e
+        - New GPT-5.5 OpenAI model: `llm -m gpt-5.5`.\\n#1418\\n\\u003e - New option
+        to set the text verbosity level for GPT-5+ OpenAI models: `-o verbosity low`.\\nValues
+        are `low`, `medium`, `high`.\\n\\u003e - New option for setting the image
+        detail level used for image attachments to OpenAI models: `-o image_detail
+        low` - values are `low`, `high` and `auto`, and GPT-5.4 and 5.5 also accept
+        `original`.\\n\\u003e - Models listed in `extra-openai-models.yaml` are now
+        also registered as asynchronous.\\n#1395\\n## Recent articles\\n- Generating
+        running routes with GPT-6 Astra and ChatGPT Work - 12th September 2026\\n-
+        OpenAI agents attacked RubyGems back in May - 12th September 2026\",\"source\":\"web\",\"title\":\"Release:
+        llm 0.31\",\"url\":\"https://simonwillison.net/2026/Apr/24/llm/\"},{\"date\":\"2026-08-24\",\"id\":7,\"last_updated\":\"2026-08-26\",\"snippet\":\"\\u003e
+        - Upgraded to the OpenAI Python library 3.x and switched the HTTP client dependency
+        from `httpx` to `httpx2`.\\n...\\n\\u003e - `llm embed` and `llm embed-multi`
+        now accept `--key`.\\n...\\n\\u003e - `llm prompt -t/--template` can now be
+        repeated to combine templates in order.\\nThis allows model configuration
+        and options from one template to be used with a prompt from another.\\n...\\n\\u003e
+        - Reasoning-capable Responses API models now support a `reasoning_summary`
+        option with `auto`, `concise`, and `detailed` values.\\nThis can be used with
+        llm openai endpoint --responses.\",\"source\":\"web\",\"title\":\"Releases\",\"url\":\"https://simonwillison.net/elsewhere/release/?page\"},{\"date\":\"2026-08-04\",\"id\":8,\"last_updated\":\"2026-09-14\",\"snippet\":\"Release
+        llm-anthropic 0.26 \u2014 LLM access to models by Anthropic, including the
+        Claude series\\nIncludes new features enabled by LLM 0.32:\\n\\u003e - New
+        models: `claude-fable-5`, `claude-sonnet-5`, and `claude-opus-5`.\\n#75, #76\\n\\u003e
+        - Added server-side tools for `WebSearch`, `WebFetch`, `CodeExecution`, and
+        `AnthropicMCP`, available through LLM's `-T` interface or Python `tools=`.\\nThe
+        previous `-o web_search*` options have been removed in favor of `-T WebSearch`.\\n#79\\n\\u003e
+        - Upgraded to llm\\u003e=0.32.\\nReasoning, tool calls, tool results, and
+        server-side tool results now stream as typed events.\\nReasoning for `llm`
+        CLI prompts now displays to standard error unless you pass `--hide-reasoning/-R`.\\n\\u003e\\n-
+        Simplified extended thinking to `thinking` and `thinking_effort` (`low`, `medium`,
+        `high`, `xhigh`, or `max`).\\nClaude 5 models think by default; `-o thinking
+        0` disables thinking for Sonnet 5 and Opus 5, while Fable 5 always thinks.\\n`-R/--hide-reasoning`
+        now omits reasoning from responses and logs.\\nThe `thinking_budget`, `thinking_display`,
+        and `thinking_adaptive` options have been removed.\\n#80\",\"source\":\"web\",\"title\":\"Release:
+        llm-anthropic 0.26\",\"url\":\"https://simonwillison.net/2026/Aug/4/llm-anthropic/\"},{\"date\":\"2026-09-02\",\"id\":9,\"last_updated\":\"2026-09-13\",\"snippet\":\"Release
+        llm 0.34 \u2014 Access large language models from the command-line\\nOne new
+        feature:\\n\\u003e - `llm logs --usage` Markdown output now includes the response
+        duration in milliseconds and as a human-readable duration.\\n`llm logs --short`
+        includes a new `duration_ms` field.\\n#1653\\nPlus several contributed bug
+        fixes, and a significant performance improvement to `llm logs` thanks to waveplate
+        on GitHub, see also llm-openrouter 0.7.1.\",\"source\":\"web\",\"title\":\"Release:
+        llm 0.34\",\"url\":\"https://simonwillison.net/2026/Sep/2/llm/\"},{\"date\":\"2026-05-12\",\"id\":10,\"last_updated\":\"2026-09-16\",\"snippet\":\"Release
+        llm 0.32a2 \u2014 Access large language models from the command-line\\nA bunch
+        of useful stuff in this LLM alpha, but the most important detail is this one:\\n\\u003e
+        Most reasoning-capable OpenAI models now use the `/v1/responses` endpoint
+        instead of `/v1/chat/completions`.\\nThis enables interleaved reasoning across
+        tool calls for GPT-5 class models.\\n#1435\\nThis means you can now see the
+        summarized reasoning tokens when you run prompts against an OpenAI model,
+        displayed in a different color to standard error.\\nUse the `-R` or `--hide-reasoning`
+        flags if you don't want to see that.\",\"source\":\"web\",\"title\":\"Release:
+        llm 0.32a2\",\"url\":\"https://simonwillison.net/2026/May/12/llm/\"}],\"type\":\"search_results\"},{\"content\":[{\"annotations\":[],\"text\":\"The
+        latest **llm 0.34** adds response-duration metrics to `llm logs` output and
+        improves logging performance; recent 0.33 releases also add repeatable templates,
+        per-call embedding keys, and reasoning summaries.[1][2]\",\"type\":\"output_text\"}],\"id\":\"msg_0d23841a-36ce-4d75-af97-96483592b616\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":{\"effort\":\"low\",\"summary\":null},\"safety_identifier\":null,\"service_tier\":\"priority\",\"status\":\"completed\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[{\"type\":\"web_search\",\"search_context_size\":\"low\",\"filters\":{\"search_domain_filter\":[\"simonwillison.net\"],\"search_recency_filter\":\"year\"}}],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":{\"cost\":{\"cache_creation_cost\":0.00144,\"cache_read_cost\":0.00007,\"currency\":\"USD\",\"input_cost\":0,\"output_cost\":0.00013,\"tool_calls_cost\":0.0025,\"tool_calls_cost_details\":{\"search_web\":0.0025},\"total_cost\":0.00414},\"input_tokens\":4661,\"input_tokens_details\":{\"cache_creation_input_tokens\":2878,\"cache_read_input_tokens\":1780,\"cached_tokens\":1780},\"output_tokens\":55,\"output_tokens_details\":{\"reasoning_tokens\":0},\"tool_calls_details\":{\"search_web\":{\"cost_usd\":0.0025,\"invocation\":1}},\"total_tokens\":4716},\"user\":null}\n"
+    headers:
+      access-control-allow-origin:
+      - '*'
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      connection:
+      - keep-alive
+      content-length:
+      - '13158'
+      content-type:
+      - application/json
+      date:
+      - Mon, 21 Sep 2026 11:33:22 GMT
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=15552000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+    status:
+      code: 200
+      message: OK
+version: 1

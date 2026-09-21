@@ -13,6 +13,24 @@ def perplexity_key(monkeypatch, tmp_path):
     )
 
 
+DROPPED_RESPONSE_HEADERS = ("set-cookie", "x-request-id", "cf-ray")
+
+
+def drop_tracking_headers(response):
+    response["headers"] = {
+        name: value
+        for name, value in response["headers"].items()
+        if name.lower() not in DROPPED_RESPONSE_HEADERS
+        and not name.lower().startswith("x-ratelimit-")
+    }
+    return response
+
+
 @pytest.fixture(scope="module")
 def vcr_config():
-    return {"filter_headers": ["authorization"]}
+    return {
+        "filter_headers": ["authorization"],
+        "match_on": ["method", "scheme", "host", "port", "path", "query", "body"],
+        "decode_compressed_response": True,
+        "before_record_response": drop_tracking_headers,
+    }
