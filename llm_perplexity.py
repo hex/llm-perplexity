@@ -1,14 +1,17 @@
+# ABOUTME: LLM plugin that sends prompts to Perplexity's Agent API.
+# ABOUTME: Maps the Sonar model ids to Agent API presets and formats search citations.
 import base64
 import mimetypes
+from importlib.metadata import PackageNotFoundError, version
 
 import llm
 from llm.utils import (
     remove_dict_none_values,
     simplify_usage_dict,
 )
-from openai import OpenAI
+from openai import APIError, OpenAI
 from pydantic import Field, field_validator, model_validator
-from typing import Optional, List, Dict, Literal
+from typing import Optional, List, Literal
 
 CITATIONS_HEADING = "\n\n## Citations:\n"
 
@@ -47,6 +50,24 @@ def web_search_tool(options) -> Optional[dict]:
     if filters:
         tool["filters"] = filters
     return tool
+
+
+def integration_header() -> str:
+    """Value of the X-Pplx-Integration header, in Perplexity's name/version form."""
+    try:
+        return f"llm-perplexity/{version('llm-perplexity')}"
+    except PackageNotFoundError:
+        return "llm-perplexity/dev"
+
+
+def search_results(response_data: dict) -> List[dict]:
+    """Collect the sources from every search_results item of an Agent API response."""
+    return [
+        result
+        for item in response_data.get("output") or []
+        if item.get("type") == "search_results"
+        for result in item.get("results") or []
+    ]
 
 
 @llm.hookimpl
@@ -144,67 +165,13 @@ class Perplexity(llm.Model):
     key_env_var = "LLM_PERPLEXITY_KEY"
     model_id = "perplexity"
     can_stream = True
-    base_url = "https://api.perplexity.ai"
+    base_url = "https://api.perplexity.ai/v1"
 
     class Options(PerplexityOptions):
         pass
 
     def __init__(self, model_id):
         self.model_id = model_id
-
-    @staticmethod
-    def combine_chunks(chunks: List) -> dict:
-        content = ""
-        role = None
-        finish_reason = None
-        logprobs = []
-        usage = {}
-        citations = {}
-
-        for item in chunks:
-            if hasattr(item, "usage") and item.usage:
-                usage = item.usage.model_dump()
-
-            # Check for both search_results (new) and citations (legacy)
-            if hasattr(item, "search_results") and item.search_results:
-                citations = item.search_results
-            elif hasattr(item, "citations") and item.citations:
-                citations = item.citations
-
-            for choice in item.choices:
-                if choice.logprobs and hasattr(choice.logprobs, "top_logprobs"):
-                    logprobs.append(
-                        {
-                            "text": choice.text if hasattr(choice, "text") else None,
-                            "top_logprobs": choice.logprobs.top_logprobs,
-                        }
-                    )
-
-                if not hasattr(choice, "delta"):
-                    content += choice.text
-                    continue
-                role = choice.delta.role
-                if choice.delta.content is not None:
-                    content += choice.delta.content
-                if choice.finish_reason is not None:
-                    finish_reason = choice.finish_reason
-
-        combined = {
-            "content": content,
-            "role": role,
-            "finish_reason": finish_reason,
-            "usage": usage,
-            "citations": citations,
-        }
-        if logprobs:
-            combined["logprobs"] = logprobs
-        if chunks:
-            for key in ("id", "object", "model", "created", "index"):
-                value = getattr(chunks[0], key, None)
-                if value is not None:
-                    combined[key] = value
-
-        return combined
 
     def build_input(self, prompt, conversation) -> List[dict]:
         past_turns = conversation.responses if conversation else []
@@ -275,12 +242,12 @@ class Perplexity(llm.Model):
         if not usage:
             return
 
-        input_tokens = usage.get("prompt_tokens", 0)
-        output_tokens = usage.get("completion_tokens", 0)
         details = {k: v for k, v in usage.items()
-                   if k not in ("prompt_tokens", "completion_tokens", "total_tokens")}
+                   if k not in ("input_tokens", "output_tokens", "total_tokens")}
         response.set_usage(
-            input=input_tokens, output=output_tokens, details=simplify_usage_dict(details)
+            input=usage.get("input_tokens", 0),
+            output=usage.get("output_tokens", 0),
+            details=simplify_usage_dict(details),
         )
 
     @staticmethod
@@ -299,127 +266,40 @@ class Perplexity(llm.Model):
                 formatted += f"[{i}] {citation}\n"
         return formatted
 
-    @staticmethod
-    def _get_citations(obj):
-        """Extract citations from a response object, checking both new and legacy fields."""
-        if hasattr(obj, "search_results") and obj.search_results:
-            return obj.search_results
-        if hasattr(obj, "citations") and obj.citations:
-            return obj.citations
-        return None
-
     def execute(self, prompt, stream, response, conversation):
-        if prompt.options.use_openrouter:
-            if not any(p["name"] == "llm-openrouter" for p in llm.get_plugins()):
-                raise llm.ModelError(
-                    "OpenRouter support requires the llm-openrouter plugin. "
-                    "Install it with: llm install llm-openrouter"
-                )
-            api_key = llm.get_key("openrouter", "LLM_OPENROUTER_KEY")
-            base_url = "https://openrouter.ai/api/v1"
-            model_id = f"perplexity/{self.model_id}"
-            default_headers = None
-        else:
-            api_key = self.get_key()
-            base_url = self.base_url
-            model_id = self.model_id
-            default_headers = {"X-Pplx-Integration": "llm-perplexity"}
+        client = OpenAI(
+            api_key=self.get_key(),
+            base_url=self.base_url,
+            default_headers={"X-Pplx-Integration": integration_header()},
+        )
+        request = self.build_request(prompt, conversation, stream)
 
-        client = OpenAI(api_key=api_key, base_url=base_url, default_headers=default_headers)
+        completed = None
+        try:
+            if stream:
+                for event in client.responses.create(**request):
+                    if event.type == "response.output_text.delta":
+                        yield event.delta
+                    elif event.type in ("response.completed", "response.incomplete", "response.failed"):
+                        completed = event.response
+            else:
+                completed = client.responses.create(**request)
+                yield completed.output_text
+        except APIError as e:
+            raise llm.ModelError(f"Perplexity API error: {e.message}")
 
-        kwargs = {
-            "model": model_id,
-            "messages": self.build_messages(prompt, conversation),
-            "stream": stream,
-            "max_tokens": prompt.options.max_tokens or None,
-        }
+        if completed is None:
+            raise llm.ModelError("Perplexity ended the stream without a final response")
 
-        if prompt.options.top_p:
-            kwargs["top_p"] = prompt.options.top_p
-        else:
-            kwargs["temperature"] = prompt.options.temperature
+        # The openai SDK has no type for Perplexity's search_results output item,
+        # so serialising with warnings on prints a pydantic warning per request
+        response_data = completed.model_dump(warnings=False)
+        response.response_json = remove_dict_none_values(response_data)
 
-        if prompt.options.stop:
-            kwargs["stop"] = prompt.options.stop
-
-        # Perplexity-specific parameters go in extra_body since the
-        # openai client rejects non-standard kwargs
-        extra = {}
-
-        if prompt.options.top_k:
-            extra["top_k"] = prompt.options.top_k
-
-        # Search parameters
-        if prompt.options.search_recency_filter:
-            extra["search_recency_filter"] = prompt.options.search_recency_filter
-
-        if prompt.options.search_domain_filter:
-            domains = [d.strip() for d in prompt.options.search_domain_filter.split(",") if d.strip()]
-            if domains:
-                extra["search_domain_filter"] = ",".join(domains)
-
-        if prompt.options.search_type:
-            extra["web_search_options"] = {"search_type": prompt.options.search_type}
-
-        if prompt.options.search_mode:
-            extra["search_mode"] = prompt.options.search_mode
-
-        if prompt.options.disable_search:
-            extra["disable_search"] = prompt.options.disable_search
-
-        if prompt.options.search_language_filter:
-            extra["search_language_filter"] = prompt.options.search_language_filter
-
-        # Generation parameters
-        if prompt.options.reasoning_effort:
-            extra["reasoning_effort"] = prompt.options.reasoning_effort
-
-        if prompt.options.return_images:
-            extra["return_images"] = prompt.options.return_images
-
-        if prompt.options.return_related_questions:
-            extra["return_related_questions"] = prompt.options.return_related_questions
-
-        if prompt.options.language_preference:
-            extra["language_preference"] = prompt.options.language_preference
-
-        if extra:
-            kwargs["extra_body"] = extra
-
-        if stream:
-            completion = client.chat.completions.create(**kwargs)
-            chunks = []
-            usage = None
-            citations = None
-
-            for chunk in completion:
-                chunks.append(chunk)
-                if hasattr(chunk, "usage") and chunk.usage:
-                    usage = chunk.usage.model_dump()
-                chunk_citations = self._get_citations(chunk)
-                if chunk_citations:
-                    citations = chunk_citations
-                try:
-                    content = chunk.choices[0].delta.content
-                except IndexError:
-                    content = None
-                if content is not None:
-                    yield content
-            response.response_json = remove_dict_none_values(Perplexity.combine_chunks(chunks))
-
-            if citations and prompt.options.include_citations:
-                yield self.format_citations(citations)
-
-        else:
-            completion = client.chat.completions.create(**kwargs)
-            response.response_json = remove_dict_none_values(completion.model_dump())
-            usage = completion.usage.model_dump()
-            yield completion.choices[0].message.content
-            citations = self._get_citations(completion)
-            if citations and prompt.options.include_citations:
-                yield self.format_citations(citations)
-        self.set_usage(response, usage)
-        response._prompt_json = {"messages": kwargs["messages"]}
+        sources = search_results(response_data)
+        if sources and prompt.options.include_citations:
+            yield self.format_citations(sources)
+        self.set_usage(response, response_data.get("usage"))
 
     def __str__(self):
         return f"Perplexity: {self.model_id}"

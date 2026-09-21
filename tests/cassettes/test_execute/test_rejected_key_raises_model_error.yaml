@@ -1,0 +1,77 @@
+interactions:
+- request:
+    body: '{"input":[{"role":"user","content":"Hello"}],"stream":false,"preset":"fast"}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '76'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 3.16.2
+      x-pplx-integration:
+      - llm-perplexity/2026.9.0
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 3.16.2
+      x-stainless-read-timeout:
+      - '600'
+      x-stainless-retry-count:
+      - '0'
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.9
+    method: POST
+    uri: https://api.perplexity.ai/v1/responses
+  response:
+    body:
+      string: '{"error":{"message":"Invalid API key provided. Ensure your API key
+        is correct and active.","type":"invalid_api_key","code":401}}
+
+        '
+    headers:
+      access-control-allow-origin:
+      - '*'
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a3e85e5228b5e59e-OTP
+      connection:
+      - keep-alive
+      content-type:
+      - application/json
+      date:
+      - Mon, 21 Sep 2026 10:25:53 GMT
+      server:
+      - cloudflare
+      set-cookie:
+      - __cf_bm=lYi_.vKuQBxmopBdubUGDAguG_M_vcth3c4JvhwCM2o-1789986352.989511-1.0.1.1-LOiYeUfC.d4ROXuRf2z6iX7GA5YefLXsfLUS44yI.AFhMu4h7L8.jaIf6uitYK9zrx02fp68Csl7mKnl1j6VnxLlFJoDwJlIGOMvgE34gBmV7izfGFAB5icGeYUbaiyh;
+        HttpOnly; SameSite=None; Secure; Path=/; Domain=perplexity.ai; Expires=Mon,
+        21 Sep 2026 10:55:53 GMT
+      - __cflb=04dToWaRite5R1fQA5HfyWsXiTjNxDHfRazC4gCG3w; HttpOnly; SameSite=None;
+        Secure; Path=/; Expires=Mon, 21 Sep 2026 10:55:53 GMT
+      strict-transport-security:
+      - max-age=15552000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+    status:
+      code: 401
+      message: Unauthorized
+version: 1
