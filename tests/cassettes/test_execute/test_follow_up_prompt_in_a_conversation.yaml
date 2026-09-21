@@ -1,0 +1,325 @@
+interactions:
+- request:
+    body: '{"input":[{"role":"user","content":"What is the capital of France? One
+      word."}],"stream":false,"preset":"fast"}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '111'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 3.16.2
+      x-pplx-integration:
+      - llm-perplexity/2026.9.0
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 3.16.2
+      x-stainless-read-timeout:
+      - '600'
+      x-stainless-retry-count:
+      - '0'
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.9
+    method: POST
+    uri: https://api.perplexity.ai/v1/responses
+  response:
+    body:
+      string: "{\"background\":false,\"completed_at\":1789990394,\"created_at\":1789990394,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_0b2ccef8-33f1-4686-a3ef-07cb24ceb6a8\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"openai/gpt-5.6-luna\",\"object\":\"response\",\"output\":[{\"queries\":[\"What
+        is the capital of France? One word.\"],\"results\":[{\"date\":\"2001-11-06\",\"id\":1,\"last_updated\":\"2026-09-21\",\"snippet\":\"**Paris**
+        is the capital and largest city of France, with an estimated city population
+        of 2.04 million in an area of 105.4 km^2^ (40.7 sq mi), as of January 2026,
+        and a metropolitan population of 13.3 million (2023).\\n...\\nAs the capital
+        of France, Paris is the seat of France's national government.\",\"source\":\"web\",\"title\":\"Paris
+        - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/Paris\"},{\"date\":\"2026-06-10\",\"id\":2,\"last_updated\":\"2026-06-11\",\"snippet\":\"**France**,
+        country of northwestern Europe.\\n...\\n- **Capital:**\\nParis\\n- **Population:**\\n...\\n-
+        **Currency Exchange Rate:**\\n...\\n- **Head Of State:**\\n...\\nThe capital
+        and by far the most important city of France is Paris, one of the world\u2019s
+        preeminent cultural and commercial centres.\",\"source\":\"web\",\"title\":\"France
+        | History, Maps, Flag, Population, Cities, Capital, \\u0026 ...\",\"url\":\"https://www.britannica.com/place/France\"},{\"date\":\"2026-06-05\",\"id\":3,\"last_updated\":\"2026-06-11\",\"snippet\":\"#
+        Paris\\nnational capital, France\\nQuick Summary\\n...\\n### Paris is the
+        capital of what country?\\nParis is the national capital of France.\\n**Paris**,
+        city and capital of France, situated in the north-central part of the country.\",\"source\":\"web\",\"title\":\"Paris
+        | Definition, Map, Population, Facts, \\u0026 History - Britannica\",\"url\":\"https://www.britannica.com/place/Paris\"},{\"date\":\"2018-06-29\",\"id\":4,\"last_updated\":\"2026-09-19\",\"snippet\":\"Paris
+        is the capital city of France.\\n...\\nAs the capital city of France, the
+        city plays host to the national government of France.\",\"source\":\"web\",\"title\":\"What
+        is the Capital of France?\",\"url\":\"https://www.worldatlas.com/articles/what-is-the-capital-of-france.html\"},{\"id\":5,\"last_updated\":\"2026-09-20\",\"snippet\":\"France\\nCapital:Paris\\nPopulation:68.4M\\n...\\n###
+        Capital City\\n- **Capital Name**\\nParis\\n- **Capital - geographic coordinate**\\n48
+        52 N, 2 20 E\\n- **Capital Time Difference**\\nUTC+1 (6 hours ahead of Washington,
+        DC, during Standard Time) time zone note: applies to metropolitan France only;
+        for its overseas regions the time difference is UTC-4 for Guadeloupe and Martinique,
+        UTC-3 for French Guiana, UTC+3 for Mayotte, and UTC+4 for Reunion\\n...\\nWhat
+        is the capital of France?\\n**Paris** is the capital of France and by far
+        its most populous and influential city.\",\"source\":\"web\",\"title\":\"France
+        \u2014 Facts, Capital, Population, Flag \\u0026 Profile\",\"url\":\"https://www.countryreports.org/country/France\"},{\"date\":\"2003-01-15\",\"id\":6,\"last_updated\":\"2026-07-02\",\"snippet\":\"This
+        is a chronological list of capitals of France.\\nThe capital of France has
+        been Paris since its liberation in 1944.\\n...\\n- Paris (1945\u2013present
+        day).\",\"source\":\"web\",\"title\":\"List of capitals of France - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/List_of_capitals_of_France\"},{\"date\":\"2018-08-13\",\"id\":7,\"last_updated\":\"2026-08-26\",\"snippet\":\"Paris
+        is synonymous with all that is French.\\n...\\n**PARIS** , capital of *France.\\n...\\n**Paris**
+        Capital of France, on the River Seine.\",\"source\":\"web\",\"title\":\"Paris\",\"url\":\"https://www.encyclopedia.com/places/britain-ireland-france-and-low-countries/french-political-geography/paris\"},{\"date\":\"2026-01-22\",\"id\":8,\"last_updated\":\"2026-05-07\",\"snippet\":\"Paris
+        is the capital of France, a major European city where history, culture, and
+        modern life meet along the Seine River.\\n...\\nParis is located in north-central
+        France, within the \xCEle-de-France region, along a gentle bend of the Seine
+        River.\\n...\\nParis serves as the capital of France and the center of modern
+        governance, home to the President at the \xC9lys\xE9e Palace, the Prime Minister
+        at the H\xF4tel Matignon, and Parliament\u2019s two chambers.\",\"source\":\"web\",\"title\":\"Capital
+        of France | Paris Travel Guide, Facts \\u0026 Highlights - SimCornersimcorner.com
+        \u203A blogs \u203A travel-guides \u203A capital-of-france\",\"url\":\"https://simcorner.com/blogs/travel-guides/capital-of-france\"},{\"id\":9,\"last_updated\":\"2026-03-19\",\"snippet\":\"Paris,
+        France\\n## Paris facts: Paris, the capital of France\\nParis is the **capital
+        of France**, the largest country of Europe with 550 000 km2 (65 millions inhabitants).\\n...\\nParis
+        remained the capital of\\nFrance until today, with one four year interruption.\",\"source\":\"web\",\"title\":\"Paris
+        facts: the capital of France in history\",\"url\":\"https://home.adelphi.edu/~ca19535/page%204.html\"},{\"date\":\"2026-02-23\",\"id\":10,\"last_updated\":\"2026-03-06\",\"snippet\":\"This
+        is Paris, a city that has served as the beating heart of France for well over
+        a thousand years.\\nIts role as the national capital is so deeply woven into
+        global consciousness that the word \\\"Paris\\\" has become almost synonymous
+        with France itself, yet the story of how and why this particular city rose
+        to such prominence is richer and more layered than most people realize.\\nTL;DR:
+        The capital city of France is Paris.\\nIt has held this status for centuries,
+        evolving from a small settlement on the Seine into one of the most influential
+        political, cultural, and economic centers on Earth.\\nParis is home to the
+        French government, major international organizations, and a population of
+        over two million within the city proper, with more than twelve million in
+        the greater metropolitan area.\\n...\\nWhatever challenges arise, the fundamental
+        answer to the question remains as stable as the limestone foundations beneath
+        the city's streets.\\nParis is, and for the foreseeable future will remain,
+        the capital of France.\\n## Key takeaways\\n- Paris is the capital city of
+        France, a status it has held in various forms since the early sixth century
+        CE.\",\"source\":\"web\",\"title\":\"What is the Capital of France? History
+        \\u0026 Facts About Paris\",\"url\":\"https://asmr.education/faq/france/capital-of-france-paris\"}],\"type\":\"search_results\"},{\"content\":[{\"annotations\":[],\"text\":\"Paris\",\"type\":\"output_text\"}],\"id\":\"msg_69f2bfbc-7f6d-4d1d-b1e1-319d62a2e69d\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"priority\",\"status\":\"completed\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":{\"cost\":{\"cache_read_cost\":0.00012,\"currency\":\"USD\",\"input_cost\":0,\"output_cost\":0.00001,\"tool_calls_cost\":0.0025,\"tool_calls_cost_details\":{\"search_web\":0.0025},\"total_cost\":0.00263},\"input_tokens\":3115,\"input_tokens_details\":{\"cache_creation_input_tokens\":0,\"cache_read_input_tokens\":3112,\"cached_tokens\":3112},\"output_tokens\":5,\"output_tokens_details\":{\"reasoning_tokens\":0},\"tool_calls_details\":{\"search_web\":{\"cost_usd\":0.0025,\"invocation\":1}},\"total_tokens\":3120},\"user\":null}\n"
+    headers:
+      access-control-allow-origin:
+      - '*'
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      connection:
+      - keep-alive
+      content-length:
+      - '7173'
+      content-type:
+      - application/json
+      date:
+      - Mon, 21 Sep 2026 11:33:16 GMT
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=15552000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+    status:
+      code: 200
+      message: OK
+- request:
+    body: '{"input":[{"role":"user","content":"What is the capital of France? One
+      word."},{"role":"assistant","content":"Paris"},{"role":"user","content":"And
+      of Spain? One word."}],"stream":false,"preset":"fast"}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '202'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 3.16.2
+      x-pplx-integration:
+      - llm-perplexity/2026.9.0
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 3.16.2
+      x-stainless-read-timeout:
+      - '600'
+      x-stainless-retry-count:
+      - '0'
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.9
+    method: POST
+    uri: https://api.perplexity.ai/v1/responses
+  response:
+    body:
+      string: "{\"background\":false,\"completed_at\":1789990396,\"created_at\":1789990396,\"error\":null,\"frequency_penalty\":0,\"id\":\"resp_6609047a-0f05-4940-bf72-97b3e257bfd7\",\"incomplete_details\":null,\"instructions\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"metadata\":{},\"model\":\"openai/gpt-5.6-luna\",\"object\":\"response\",\"output\":[{\"queries\":[\"And
+        of Spain? One word.\"],\"results\":[{\"date\":\"2001-10-03\",\"id\":1,\"last_updated\":\"2026-09-19\",\"snippet\":\"**Spain**,
+        officially the **Kingdom of Spain**, is a country in Southern and Western
+        Europe with territories in North Africa.\\nFeaturing the southernmost point
+        of continental Europe, it is the largest country in Southern Europe and the
+        fourth-most populous European Union (EU) member state.\\nSpanning the majority
+        of the Iberian Peninsula, its territory also includes the Canary Islands,
+        in the Eastern Atlantic Ocean; the Balearic Islands, in the Western Mediterranean
+        Sea; and the autonomous cities of Ceuta and Melilla, in mainland Africa.\\n...\\nSpain's
+        capital and largest city is Madrid; other major urban areas include Barcelona,
+        Valencia, Zaragoza, Seville, Bilbao, M\xE1laga, Murcia, Palma de Mallorca
+        and Las Palmas.\\n...\\nSpain is a secular parliamentary democracy and a constitutional
+        monarchy, with King Felipe VI as head of state.\\nA developed country, it
+        has a high nominal GDP per capita globally and an advanced economy that ranks
+        among the largest in the world and the fourth-largest in the EU.\\nThe official
+        language at the national level is Spanish, the world's second-most spoken
+        native language, although other regional languages have co-official status
+        in their respective autonomous communities.\\n...\\n|Currency|Euro (\u20AC)
+        (EUR)|\\n...\\n|Calling code|+34|\\n|ISO 3166 code|ES|\\n...\\nThe name of
+        Spain (*Espa\xF1a*) comes from *Hispania*, the name used by the Ancient Romans
+        for the Iberian Peninsula during the Roman Republic and the Roman Empire.\\n...\\nIn
+        January 2026, Spain had a population of 49,570,725 people.\",\"source\":\"web\",\"title\":\"Spain
+        - Wikipedia\",\"url\":\"https://en.wikipedia.org/wiki/Spain\"},{\"date\":\"2026-06-11\",\"id\":2,\"last_updated\":\"2026-06-11\",\"snippet\":\"Also
+        known as: Espa\xF1a, Kingdom of Spain, Reino de Espa\xF1a\\n**\\n...\\n**Spain**,
+        country located in extreme southwestern Europe.\\nIt occupies about 85 percent
+        of the Iberian Peninsula, which it shares with its smaller neighbor Portugal.\\nSpain
+        is a storied country of stone castles, snowcapped mountains, vast monuments,
+        and sophisticated cities, all of which have made it a favored travel destination.\\n...\\nAudio
+        File: National anthem of Spain\\n- **Head Of Government:**\\nPrime Minister:
+        Pedro S\xE1nchez\\n- **Capital:**\\nMadrid\\n- **Population:**\\n(2026 est.)\\n49,752,000\\n-
+        **Currency Exchange Rate:**\\n1 USD equals 0.867 euro\\n- **Head Of State:**\\nKing:
+        Felipe VI\\n- **Form Of Government:**\\nconstitutional monarchy with two legislative
+        houses (Senate [266^1^]; Congress of Deputies [350])\\n- **Official Language:**\\nCastilian
+        Spanish^2^\\n- **Official Religion:**\\nnone\\n- **Official Name:**\\nReino
+        de Espa\xF1a (Kingdom of Spain)\\n- **Total Area (Sq Km):**\\n505,983\\n-
+        **Total Area (Sq Mi):**\\n195,361\\n- **Monetary Unit:**\\neuro (\u20AC)\\n-
+        **Population Rank:**\\n...\\n- **Population Projection 2030:**\",\"source\":\"web\",\"title\":\"Spain
+        | History, Map, Flag, Population, Currency, Climate, \\u0026 Facts\",\"url\":\"https://www.britannica.com/place/Spain\"},{\"date\":\"2018-07-13\",\"id\":3,\"last_updated\":\"2024-09-30\",\"snippet\":\"Say
+        the word Spain and it conjures up images of bulls, flamenco, and sangria.\",\"source\":\"web\",\"title\":\"A
+        to Z of Spain part 1\",\"url\":\"https://www.spain-holiday.com/Spain/articles/a-to-z-of-spain-part-1\"},{\"id\":4,\"last_updated\":\"2025-11-03\",\"snippet\":\"Spain
+        occupies most of the Iberian Peninsula, stretching south from the Pyrenees
+        Mountains to the Strait of Gibraltar, which separates Spain from Africa.\\nTo
+        the east lies the Mediterranean Sea, including Spain's Balearic Islands.\\nSpain
+        also rules two cities in North Africa and the Canary Islands in the Atlantic.\\nThe
+        interior of Spain is a high, dry plateau surrounded and crisscrossed by mountain
+        ranges.\\n...\\nMany Spaniards share a common ethnic background: a mixture
+        of the early inhabitants of the Iberian Peninsula, the Celts, and later conquerors
+        from Europe and Africa.\\n...\\nSpaniards are known for their love of life
+        and for eating and drinking with family and friends.\\nTraditional appetizers
+        like tapas or pintxos, the Basque country equivalent, are popular.\\nRegional
+        dances and music are almost as important as soccer and religious festivals.\\n...\\nIn
+        Spain, which is a parliamentary monarchy, the king and the elected president
+        share the power.\\nAlthough there is a national parliament, Spain is one of
+        the most decentralized democracies in Europe.\\nEach of its 17 regions manages
+        its own schools, hospitals, and other public services.\\nWith vibrant, historic
+        cities and sunny beaches, Spain attracts more tourists than any other European
+        country except France.\\nServices to the tourism industry drive Spain's economy,
+        the eighth largest in the world.\\nIn 1986 Spain joined the European Community
+        and further modernized its economy.\\nImportant industries include mining,
+        shipbuilding, and textiles.\\n...\\nSettlers have migrated to Spain from Europe,
+        Africa, and the Mediterranean since the dawn of history.\\nThe Phoenicians,
+        who came in the 8th century B.C., called the peninsula \\\"Span,\\\" or hidden
+        land.\",\"source\":\"web\",\"title\":\"Spain\",\"url\":\"https://kids.nationalgeographic.com/geography/countries/article/spain\"},{\"id\":5,\"last_updated\":\"2026-08-14\",\"snippet\":\"|*Reino
+        de Espa\xF1a* no Kingdom of Spain|*Reino de Espa\xF1a* no Kingdom of Spain|*Reino
+        de Espa\xF1a* no Kingdom of Spain|\\n...\\n|Official languages|Official languages|Spanish|\\n|Recognized
+        regional\_languages|Recognized regional\_languages|Basque, Catalan/Valencian,
+        Galician and Occitan|\\n|Demonym|Demonym|Spanish, Spaniard|\\n|Government|Government|Unitary
+        parliamentary democracy and Constitutional monarchy|\\n...\\n|Currency|Currency|Euro
+        (\u20AC) (`EUR`)|\\n|Time zone|Time zone|CET (UTC+1)|\\n...\\n**Spain**, officially
+        the **Kingdom of Spain** (Spanish: *Reino de Espa\xF1a*), is a country located
+        in Southern Europe, with two small exclaves in North Africa (both bordering
+        Morocco).\\nIt is the largest of the three sovereign nations that make up
+        the Iberian Peninsula\u2014the others are Portugal and the microstate of Andorra.\\nSpain
+        has been a constitutional monarchy with a parliamentary democracy since 1975,
+        when the authoritarian Franco regime ended.\\nIt is a developed country with
+        the ninth-largest economy in the world.\\n...\\nSpain, from the Latin name
+        *Hispania,* is located southwest of France, with the Bay of Biscay to the
+        north, North Atlantic Ocean and Portugal to the west, Gibraltar to the south,
+        the Mediterranean Sea to the south-east.\",\"source\":\"web\",\"title\":\"Spain
+        - New World Encyclopedia\",\"url\":\"https://www.newworldencyclopedia.org/entry/Spain\"},{\"date\":\"2026-09-19\",\"id\":6,\"last_updated\":\"2026-09-19\",\"snippet\":\"A
+        proper noun refers to the name of a person, place, or thing.\\n...\\n1. (country)\\na.
+        Spain\\n\\\"Cuando pienso en Espa\xF1a, pienso en flamenco y tapas\\\", dijo
+        el estudiante.\\\"When I think of Spain, I think of flamenco and tapas,\\\"
+        said the student.\",\"source\":\"web\",\"title\":\"Espa\xF1a | Spanish to
+        English Translation - SpanishDictionary.com\",\"url\":\"https://www.spanishdict.com/translate/Espa%C3%B1a\"},{\"id\":7,\"last_updated\":\"2026-07-15\",\"snippet\":\"Other
+        forms: **Spains**\\nDefinitions of Spain\\n1. noun\\na parliamentary monarchy
+        in southwestern Europe on the Iberian Peninsula; a former colonial power\\n-
+        **synonyms:**\\nEspana, Kingdom of Spain\\n- **example of:**\\nEuropean country,
+        European nation any one of the countries occupying the European continent\\n-
+        **types:**\\nLogrono a city in northern Spain on the Ebro River\\nPronunciation\",\"source\":\"web\",\"title\":\"Spain
+        - Definition, Meaning \\u0026 Synonyms - Vocabulary.com\",\"url\":\"https://www.vocabulary.com/dictionary/Spain\"},{\"date\":\"2024-10-25\",\"id\":8,\"last_updated\":\"2026-09-21\",\"snippet\":\"###
+        5.\\nSpain\u2019s national anthem has no words\\nSpain\u2019s national anthem,
+        \u201CLa Marcha Real\u201D (The Royal March), is one of the few national anthems
+        in the world that has no official lyrics.\\nThroughout its history, a few
+        attempts have been made throughout history to add lyrics, but none have stuck.\\n...\\nSpain
+        nurtured the author of the world\u2019s first modern novel, \u201CDon Quixote\u201D
+        (or \u201CEl Ingenioso Hidalgo Don Quijote de la Mancha\u201D, translating
+        as \u201CThe Ingenius Gentleman Don Quixote of La Mancha\u201D), written by
+        Miguel de Cervantes.\\n...\\nSpain boasts 505,000 square kilometers of landmass,
+        and its 1,000 or so islands account for 12,500 km\xB2 of that, including Mallorca,
+        Menorca, Ibiza, and the Canary Islands.\",\"source\":\"web\",\"title\":\"25
+        Interesting Facts About Spain You Need to Know\",\"url\":\"https://www.insightvacations.com/blog/interesting-facts-about-spain/\"},{\"date\":\"2023-02-02\",\"id\":9,\"last_updated\":\"2026-09-20\",\"snippet\":\"###
+        Alternate Names for Spain\\n1. **Espa\xF1a**: In Spanish, the native language
+        of the country, Spain is referred to as \u201CEspa\xF1a.\u201D\\nThis is the
+        official name used by Spanish-speaking people worldwide.\\n2. **Kingdom of
+        Spain**: This is the formal name of the country, emphasizing its status as
+        a constitutional monarchy.\\nIt is often used in official documents and international
+        contexts.\\n3. **Iberia**: The term \u201CIberia\u201D is derived from the
+        Iberian Peninsula, which is the landmass that includes Spain and Portugal.\\nIn
+        ancient times, the Iberian Peninsula was home to various tribes and cultures.\\n4.
+        **Hispania**: In Roman times, the territory of present-day Spain was known
+        as Hispania.\\nThe Romans first arrived on the peninsula in the 3rd century
+        BC and gradually expanded their control over the region.\\n5. **Espanya**:
+        In Catalan, a language spoken in Catalonia and other regions of Spain, the
+        country is called \u201CEspanya.\u201D\\n6. **Espanha**: In Portuguese, the
+        neighboring language to Spanish, Spain is referred to as \u201CEspanha.\u201D\\n...\\nSpain,
+        known as \u201CEspa\xF1a\u201D in Spanish, is a country with a vibrant history
+        and cultural tapestry.\\nIt is also referred to as \u201CIberia\u201D and
+        \u201CHispania\u201D in historical contexts, emphasizing its ancient past.\\nThe
+        diverse linguistic landscape of Spain gives rise to alternative names like
+        \u201CEspanya\u201D in Catalan and \u201CEspanha\u201D in Portuguese.\",\"source\":\"web\",\"title\":\"Another
+        Word For Spain in Spanish | Spanish to Go\",\"url\":\"https://spanishtogo.app/another-word-for-spain/\"},{\"id\":10,\"last_updated\":\"2025-01-27\",\"snippet\":\"#
+        The Spanish word for\\n*one* is\\nuno\\n## Spanish Definition\\n...\\n|1.
+        adj.\\nUno, i, I o 1.|\\n|2.\\nUno.|\\n|3. n. El n\xFAmero uno.|\\n...\\n|uno|\\n...\\n|1.
+        num.\\none|\\n|2. det.\\none|\\n|3. pron.\\none|\\n|4. v. first-person singular
+        present indicative of unir|\\n...\\n|1. n-f. feminine of uno|\\n...\\n|4.
+        pron.\\none (an indefinite plural pronoun using a singular feminine item,
+        used for females)|\\n|5. v. third-person singular present subjunctive of unir|\",\"source\":\"web\",\"title\":\"What
+        is the Spanish Word for\",\"url\":\"https://www.lexisrex.com/Spanish/Words/one\"}],\"type\":\"search_results\"},{\"content\":[{\"annotations\":[],\"text\":\"Madrid\",\"type\":\"output_text\"}],\"id\":\"msg_f5f5207d-2aab-4c1e-9cd8-1c155c00340a\",\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"presence_penalty\":0,\"previous_response_id\":null,\"prompt_cache_key\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":\"priority\",\"status\":\"completed\",\"store\":true,\"temperature\":1,\"text\":{\"format\":{\"type\":\"text\"}},\"tool_choice\":\"auto\",\"tools\":[],\"top_logprobs\":0,\"top_p\":1,\"truncation\":\"\",\"usage\":{\"cost\":{\"cache_creation_cost\":0.00123,\"cache_read_cost\":0.00007,\"currency\":\"USD\",\"input_cost\":0,\"output_cost\":0.00001,\"tool_calls_cost\":0.0025,\"tool_calls_cost_details\":{\"search_web\":0.0025},\"total_cost\":0.00381},\"input_tokens\":4252,\"input_tokens_details\":{\"cache_creation_input_tokens\":2469,\"cache_read_input_tokens\":1780,\"cached_tokens\":1780},\"output_tokens\":5,\"output_tokens_details\":{\"reasoning_tokens\":0},\"tool_calls_details\":{\"search_web\":{\"cost_usd\":0.0025,\"invocation\":1}},\"total_tokens\":4257},\"user\":null}\n"
+    headers:
+      access-control-allow-origin:
+      - '*'
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      connection:
+      - keep-alive
+      content-length:
+      - '12191'
+      content-type:
+      - application/json
+      date:
+      - Mon, 21 Sep 2026 11:33:17 GMT
+      server:
+      - cloudflare
+      strict-transport-security:
+      - max-age=15552000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+    status:
+      code: 200
+      message: OK
+version: 1

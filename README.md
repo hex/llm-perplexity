@@ -4,7 +4,7 @@
 [![Changelog](https://img.shields.io/github/v/release/hex/llm-perplexity?include_prereleases&label=changelog)](https://github.com/hex/llm-perplexity/releases)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](https://github.com/hex/llm-perplexity/blob/main/LICENSE)
 
-LLM access to pplx-api 3 by Perplexity Labs
+LLM plugin for Perplexity's Agent API
 
 ## Installation
 
@@ -27,12 +27,14 @@ Run `llm models` to list the models, and `llm models --options` to include a lis
 
 ## Available Models
 
-All Perplexity models have access to real-time web information. Here are the currently available models (as of 2026-02) from https://docs.perplexity.ai/models/model-cards:
+Perplexity's Sonar chat completions API will be supported until September 27, 2026. This plugin sends prompts through Perplexity's Agent API instead. The four Sonar model ids are still here, and each one selects an Agent API preset:
 
-- **sonar-pro** - Flagship model (200k context) - with web search
-- **sonar** - Base model (128k context) - with web search
-- **sonar-deep-research** - Deep research model (128k context) - with web search
-- **sonar-reasoning-pro** - Advanced reasoning model (128k context) - with web search
+- **sonar** selects the `fast` preset
+- **sonar-pro** selects the `low` preset
+- **sonar-reasoning-pro** selects the `medium` preset
+- **sonar-deep-research** selects the `high` preset
+
+Perplexity chooses the model behind each preset and can change it. Check the `model` field in the logged response JSON (`llm logs --json`) to see which model actually answered.
 
 Run prompts like this:
 
@@ -50,64 +52,35 @@ llm -m sonar-reasoning-pro 'Problem solving task'
 
 ### Advanced Options
 
-The plugin supports various parameters to customize model behavior:
+The plugin supports these parameters to customize model behavior. Some underlying models ignore `temperature` and `top_p`. Setting both is an error.
 
 ```bash
-# Control randomness (0.0 to 2.0, higher = more random)
+# Control randomness (0.0 up to but not including 2.0, higher = more random)
 llm -m sonar-pro --option temperature 0.7 'Generate creative ideas'
 
 # Nucleus sampling threshold (alternative to temperature)
 llm -m sonar-pro --option top_p 0.9 'Generate varied responses'
 
-# Token filtering (between 0 and 2048)
-llm -m sonar-pro --option top_k 40 'Generate focused content'
-
 # Limit response length
 llm -m sonar-pro --option max_tokens 500 'Summarize this article'
-
-# Return related questions
-llm -m sonar-pro --option return_related_questions true 'How does quantum computing work?'
-
-# Use Pro Search or auto classification (requires streaming)
-llm -m sonar-pro --option search_type pro 'Analyze the latest developments in quantum computing'
-llm -m sonar-pro --option search_type auto 'Compare the energy efficiency of popular EVs'
 
 # Suppress citations section and discourage inline [n] markers
 llm -m sonar-pro --option include_citations false 'Latest AI research'
 
-# Search mode: web (default), academic, or sec (SEC filings)
-llm -m sonar-pro --option search_mode academic 'Recent papers on transformer architectures'
-llm -m sonar-pro --option search_mode sec 'Apple quarterly earnings'
-
-# Disable web search entirely
-llm -m sonar-pro --option disable_search true 'What is the capital of France?'
-
 # Filter search results by domain
 llm -m sonar-pro --option search_domain_filter 'arxiv.org,nature.com' 'Recent AI papers'
+
+# Exclude a domain from search results
+llm -m sonar-pro --option search_domain_filter '-example.org' 'Recent AI papers'
 
 # Filter search results by recency (hour, day, week, month, year)
 llm -m sonar-pro --option search_recency_filter year 'Major events'
 
-# Filter search results by language
-llm -m sonar-pro --option search_language_filter en 'Latest tech news'
-
-# Penalize repetition (presence_penalty: -2.0 to 2.0)
-llm -m sonar-pro --option presence_penalty 1.5 'Tell me about different dog breeds'
-
-# Penalize frequent tokens (frequency_penalty: > 0, 1.0 = no penalty)
-llm -m sonar-pro --option frequency_penalty 1.5 'Write a varied paragraph about nature'
-
 # Control reasoning effort (minimal, low, medium, high)
 llm -m sonar-reasoning-pro --option reasoning_effort high 'Solve this complex math problem'
 
-# Include images in results
-llm -m sonar-pro --option return_images true 'Show me the Eiffel Tower'
-
-# Set output language preference
-llm -m sonar-pro --option language_preference es 'Tell me about AI'
-
-# Stop sequences
-llm -m sonar-pro --option stop 'END' 'Generate a list'
+# Control how much search context the model retrieves (low, medium, high)
+llm -m sonar-pro --option search_context_size low 'Latest AI research'
 ```
 
 ### Using Images with Perplexity
@@ -125,96 +98,56 @@ llm -m sonar-pro --option image_path /path/to/screenshot.png 'What text appears 
 llm -m sonar-pro --option image_path /path/to/diagram.png 'Explain the process shown in this diagram'
 ```
 
-Note: Only certain Perplexity models support image inputs. Currently the following formats are supported: PNG, JPEG, and GIF.
+`image_path` sends the image as an `input_image` part alongside the prompt text. `llm`'s own `-a` attachment flag is not supported yet. In a conversation, the plugin sends only the current turn's image and does not re-send images from earlier turns.
 
-### OpenRouter Access
+Note: Only certain Perplexity models support image inputs. The plugin forwards any `image/*` file; PNG, JPEG, and GIF are what Perplexity's models accept, not a plugin restriction.
 
-You can also access these models through OpenRouter. First install the OpenRouter plugin:
+## Changes in 2026.9.0
 
-```bash
-llm install llm-openrouter
-```
+This release moved the plugin from Perplexity's Sonar chat completions API to the Agent API. The Agent API does not support 13 chat completions options. Passing any of them is now an error:
 
-Then set your OpenRouter API key:
+- `top_k`
+- `stream`
+- `presence_penalty`
+- `frequency_penalty`
+- `search_type`
+- `search_mode`
+- `disable_search`
+- `search_language_filter`
+- `return_images`
+- `return_related_questions`
+- `language_preference`
+- `stop`
+- `use_openrouter`
 
-```bash
-llm keys set openrouter
-```
+Anyone using `use_openrouter` to route through OpenRouter should install the [llm-openrouter](https://github.com/simonw/llm-openrouter) plugin instead.
 
-Use the `--option use_openrouter true` flag to route requests through OpenRouter:
+Conversations logged before this upgrade still work with `llm -c`. A default saved with `llm models options set`, or an alias or template, that carries one of the options above now fails; check with `llm models options show <model>` and clear it.
 
-```bash
-llm -m sonar-pro --option use_openrouter true 'Fun facts about pelicans'
-```
+`--key` now works. Earlier the plugin silently ignored it.
+
+The logged response JSON (`llm logs --json`) now has the Agent API shape. Sources sit under an `output` item of type `search_results`, each with `title`, `url`, `date`, `last_updated`, and `snippet`. The old top-level `citations`, `search_results`, and `choices` keys are gone.
+
+A response Perplexity reports as failed now raises an error instead of returning empty text. The plugin sends `max_tokens` to the API as `max_output_tokens`; in testing, a response cut short by it still reported status `completed`.
+
+This release also raises the minimum versions to `llm>=0.26`, `openai>=1.109.1`, and Python `>=3.10`.
 
 ## Development
 
-To set up this plugin locally, first checkout the code. Then create a new virtual environment:
+Clone the repository and run the tests:
 
 ```bash
+git clone https://github.com/hex/llm-perplexity.git
 cd llm-perplexity
-python3 -m venv venv
-source venv/bin/activate
+uv run pytest
 ```
 
-Now install the dependencies and test dependencies:
+The suite runs offline against recorded cassettes and needs no API key.
+
+To re-record a cassette against the live API, delete it under `tests/cassettes/` and run:
 
 ```bash
-llm install -e '.[test]'
+LLM_PERPLEXITY_KEY=your_perplexity_api_key uv run pytest --record-mode=once
 ```
-
-### Running Tests
-
-The test suite is comprehensive and tests all example commands from the documentation with actual API calls.
-
-Before running tests, you need to set up your environment variables:
-
-1. Copy the `.env.example` file to `.env`:
-   ```bash
-   cp .env.example .env
-   ```
-
-2. Edit the `.env` file and add your Perplexity API key:
-   ```
-   LLM_PERPLEXITY_KEY=your_perplexity_api_key_here
-   ```
-
-3. (Optional) If you want to test OpenRouter integration, also add your OpenRouter API key:
-   ```
-   LLM_OPENROUTER_KEY=your_openrouter_api_key_here
-   ```
-
-4. Install the package and test dependencies using one of these methods:
-
-   **Using the setup script:**
-   ```bash
-   ./setup.sh
-   ```
-
-   **Using make:**
-   ```bash
-   make setup
-   ```
-
-   **Manually:**
-   ```bash
-   pip install -e .
-   pip install pytest python-dotenv pillow
-   ```
-
-Run the tests with pytest:
-
-```bash
-# Run all tests
-pytest test_llm_perplexity.py
-
-# Using make
-make test
-
-# Run a specific test
-pytest test_llm_perplexity.py::test_standard_models
-```
-
-Note: Running the full test suite will make real API calls to Perplexity, which may incur costs depending on your account plan.
 
 This plugin was made after the [llm-claude-3](https://github.com/simonw/llm-claude-3) plugin by Simon Willison.

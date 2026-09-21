@@ -1,59 +1,124 @@
+# ABOUTME: LLM plugin that sends prompts to Perplexity's Agent API.
+# ABOUTME: Maps the Sonar model ids to Agent API presets and formats search citations.
+import base64
+import mimetypes
+import re
+from importlib.metadata import PackageNotFoundError, version
+
 import llm
 from llm.utils import (
     remove_dict_none_values,
     simplify_usage_dict,
 )
-from openai import OpenAI
+from openai import APIError, OpenAI
 from pydantic import Field, field_validator, model_validator
-from typing import Optional, List, Dict, Literal
+from typing import Optional, List, Literal
 
-# Available models - Updated as of 2026-02-25
-# https://docs.perplexity.ai/models/model-cards
-MODELS = [
-    "sonar",
-    "sonar-pro",
-    "sonar-deep-research",
-    "sonar-reasoning-pro",
-]
+CITATIONS_HEADING = "\n\n## Citations:\n"
+
+
+CITATIONS_FOOTER_RE = re.compile(re.escape(CITATIONS_HEADING) + r"(?:\[\d+\] [^\n]*\n?)+\Z")
+
+
+def strip_citations(text: str) -> str:
+    """Remove the citations section that format_citations appends to response text."""
+    return CITATIONS_FOOTER_RE.sub("", text)
+
+
+# Perplexity's suggested Agent API preset for each Sonar model id
+# https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/how-to
+PRESETS = {
+    "sonar": "fast",
+    "sonar-pro": "low",
+    "sonar-reasoning-pro": "medium",
+    "sonar-deep-research": "high",
+}
+
+
+def web_search_tool(options) -> Optional[dict]:
+    """Build the web_search tool entry, or None when no search option is set."""
+    filters = {}
+    if options.search_domain_filter:
+        filters["search_domain_filter"] = [
+            d.strip() for d in options.search_domain_filter.split(",") if d.strip()
+        ]
+    if options.search_recency_filter:
+        filters["search_recency_filter"] = options.search_recency_filter
+
+    if not filters and not options.search_context_size:
+        return None
+
+    tool: dict = {"type": "web_search"}
+    if options.search_context_size:
+        tool["search_context_size"] = options.search_context_size
+    if filters:
+        tool["filters"] = filters
+    return tool
+
+
+def integration_header() -> str:
+    """Value of the X-Pplx-Integration header, in Perplexity's name/version form."""
+    try:
+        return f"llm-perplexity/{version('llm-perplexity')}"
+    except PackageNotFoundError:
+        return "llm-perplexity/dev"
+
+
+def search_results(response_data: dict) -> List[dict]:
+    """Collect the sources from every search_results item of an Agent API response."""
+    return [
+        result
+        for item in response_data.get("output") or []
+        if item.get("type") == "search_results"
+        for result in item.get("results") or []
+    ]
+
+
+def failure_message(response_data: dict) -> Optional[str]:
+    """Describe why an Agent API response failed, or None when it did not fail."""
+    if response_data.get("status") != "failed":
+        return None
+    error = response_data.get("error") or {}
+    return error.get("message") or "the response failed without an error message"
+
 
 @llm.hookimpl
 def register_models(register):
-    for model_id in MODELS:
+    for model_id in PRESETS:
         register(Perplexity(model_id))
+
+# Options the Agent API has no equivalent for, with the value llm logged for
+# each when the user had not set it. Logged conversations still carry them.
+UNSUPPORTED_OPTION_DEFAULTS = {
+    "top_k": None,
+    "stream": True,
+    "presence_penalty": None,
+    "frequency_penalty": None,
+    "search_type": None,
+    "search_mode": None,
+    "disable_search": None,
+    "search_language_filter": None,
+    "return_images": None,
+    "return_related_questions": False,
+    "language_preference": None,
+    "stop": None,
+    "use_openrouter": False,
+}
+
 
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
-        description="The maximum number of completion tokens returned by the API. The total number of tokens requested in max_tokens plus the number of prompt tokens sent in messages must not exceed the context window token limit of model requested. If left unspecified, then the model will generate tokens until either it reaches its stop token or the end of its context window",
+        description="The maximum number of output tokens the model may generate.",
         default=None,
     )
 
     temperature: Optional[float] = Field(
-        description="The amount of randomness in the response, valued between 0 inclusive and 2 exclusive. Higher values are more random, and lower values are more deterministic",
-        default=1,
+        description="The amount of randomness in the response, valued between 0 inclusive and 2 exclusive. Some underlying models ignore it.",
+        default=None,
     )
 
     top_p: Optional[float] = Field(
-        description="The nucleus sampling threshold, valued between 0 and 1 inclusive. For each subsequent token, the model considers the results of the tokens with 'top_p' probability mass. We recommend either altering 'top_k' or 'top_p', but not both",
-        default=None,
-    )
-
-    top_k: Optional[int] = Field(
-        description="The number of tokens to keep for highest 'top-k' filtering, specified as an integer between 0 and 2048 inclusive. If set to 0, 'top-k' filtering is disabled. We recommend either altering 'top_k' or 'top_p', but not both",
-        default=None,
-    )
-
-    stream: Optional[bool] = Field(
-        description="Determines whether or not to incrementally stream the response with server-sent events with 'content-type: text/event-stream'",
-        default=True,
-    )
-
-    presence_penalty: Optional[float] = Field(
-        description="A value between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. Incompatible with 'frequency_penalty'",
-        default=None,
-    )
-
-    frequency_penalty: Optional[float] = Field(
-        description="A multiplicative penalty greater than 0. Values greater than 1.0 penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. A value of 1.0 means no penalty. Incompatible with 'presence_penalty'",
+        description="The nucleus sampling threshold, valued between 0 and 1 inclusive. Some underlying models ignore it.",
         default=None,
     )
 
@@ -63,52 +128,17 @@ class PerplexityOptions(llm.Options):
     )
 
     search_domain_filter: Optional[str] = Field(
-        description="Filter search results by domain. Provide a comma-separated list of domains to include.",
+        description="Comma-separated list of domains to search. Prefix a domain with '-' to exclude it. Up to 20 entries.",
         default=None,
     )
 
-    search_type: Optional[Literal["fast", "pro", "auto"]] = Field(
-        description="Web search type for Sonar Pro. Options include 'fast', 'pro', or 'auto'. 'pro' and 'auto' require streaming to take effect.",
-        default=None,
-    )
-
-    search_mode: Optional[Literal["web", "academic", "sec"]] = Field(
-        description="Type of search sources. 'web' for general web, 'academic' for scholarly sources, 'sec' for SEC filings.",
-        default=None,
-    )
-
-    disable_search: Optional[bool] = Field(
-        description="Explicitly disable web search for this request.",
-        default=None,
-    )
-
-    search_language_filter: Optional[str] = Field(
-        description="Filter search results by language (e.g. 'en', 'fr', 'de').",
+    search_context_size: Optional[Literal["low", "medium", "high"]] = Field(
+        description="How much search context is retrieved for the model: 'low', 'medium' or 'high'.",
         default=None,
     )
 
     reasoning_effort: Optional[Literal["minimal", "low", "medium", "high"]] = Field(
         description="Control the computational effort for reasoning. Options: 'minimal', 'low', 'medium', 'high'.",
-        default=None,
-    )
-
-    return_images: Optional[bool] = Field(
-        description="Whether to include images in the response.",
-        default=None,
-    )
-
-    return_related_questions: Optional[bool] = Field(
-        description="Whether to return related questions in the response.",
-        default=False,
-    )
-
-    language_preference: Optional[str] = Field(
-        description="Preferred output language (e.g. 'en', 'fr', 'de').",
-        default=None,
-    )
-
-    stop: Optional[str] = Field(
-        description="Stop sequence(s) to halt generation.",
         default=None,
     )
 
@@ -122,11 +152,25 @@ class PerplexityOptions(llm.Options):
         default=True,
     )
 
+    @model_validator(mode="before")
+    @classmethod
+    def discard_unsupported_options_left_at_their_default(cls, values):
+        if not isinstance(values, dict):
+            return values
+        return {
+            name: value
+            for name, value in values.items()
+            if not (
+                name in UNSUPPORTED_OPTION_DEFAULTS
+                and value in (None, UNSUPPORTED_OPTION_DEFAULTS[name])
+            )
+        }
+
     @field_validator("temperature")
     @classmethod
     def validate_temperature(cls, temperature):
-        if not (0.0 <= temperature < 2.0):
-            raise ValueError("temperature must be in range 0-2")
+        if temperature is not None and not (0.0 <= temperature < 2.0):
+            raise ValueError("temperature must be at least 0 and below 2")
         return temperature
 
     @field_validator("top_p")
@@ -135,13 +179,6 @@ class PerplexityOptions(llm.Options):
         if top_p is not None and not (0.0 <= top_p <= 1.0):
             raise ValueError("top_p must be in range 0.0-1.0")
         return top_p
-
-    @field_validator("top_k")
-    @classmethod
-    def validate_top_k(cls, top_k):
-        if top_k is not None and (top_k <= 0 or top_k > 2048):
-            raise ValueError("top_k must be in range 0-2048")
-        return top_k
 
     @field_validator("search_recency_filter")
     @classmethod
@@ -157,294 +194,157 @@ class PerplexityOptions(llm.Options):
             domains = [d.strip() for d in domain_filter.split(",")]
             if not all(d and "." in d for d in domains):
                 raise ValueError("search_domain_filter must be a comma-separated list of valid domains")
+            if len(domains) > 20:
+                raise ValueError("search_domain_filter accepts at most 20 domains")
         return domain_filter
 
     @model_validator(mode="after")
     def validate_temperature_top_p(self):
-        if self.temperature != 1.0 and self.top_p is not None:
+        if self.temperature is not None and self.top_p is not None:
             raise ValueError("Only one of temperature and top_p can be set")
         return self
 
 
-class Perplexity(llm.Model):
+class Perplexity(llm.KeyModel):
     needs_key = "perplexity"
     key_env_var = "LLM_PERPLEXITY_KEY"
-    model_id = "perplexity"
     can_stream = True
-    base_url = "https://api.perplexity.ai"
+    base_url = "https://api.perplexity.ai/v1"
 
     class Options(PerplexityOptions):
-        use_openrouter: Optional[bool] = Field(
-            description="Whether to use OpenRouter API instead of direct Perplexity API",
-            default=False,
-        )
+        pass
 
     def __init__(self, model_id):
         self.model_id = model_id
 
-    @staticmethod
-    def combine_chunks(chunks: List) -> dict:
-        content = ""
-        role = None
-        finish_reason = None
-        logprobs = []
-        usage = {}
-        citations = {}
+    def build_input(self, prompt, conversation) -> List[dict]:
+        past_turns = conversation.responses if conversation else []
 
-        for item in chunks:
-            if hasattr(item, "usage") and item.usage:
-                usage = item.usage.model_dump()
-
-            # Check for both search_results (new) and citations (legacy)
-            if hasattr(item, "search_results") and item.search_results:
-                citations = item.search_results
-            elif hasattr(item, "citations") and item.citations:
-                citations = item.citations
-
-            for choice in item.choices:
-                if choice.logprobs and hasattr(choice.logprobs, "top_logprobs"):
-                    logprobs.append(
-                        {
-                            "text": choice.text if hasattr(choice, "text") else None,
-                            "top_logprobs": choice.logprobs.top_logprobs,
-                        }
-                    )
-
-                if not hasattr(choice, "delta"):
-                    content += choice.text
-                    continue
-                role = choice.delta.role
-                if choice.delta.content is not None:
-                    content += choice.delta.content
-                if choice.finish_reason is not None:
-                    finish_reason = choice.finish_reason
-
-        combined = {
-            "content": content,
-            "role": role,
-            "finish_reason": finish_reason,
-            "usage": usage,
-            "citations": citations,
-        }
-        if logprobs:
-            combined["logprobs"] = logprobs
-        if chunks:
-            for key in ("id", "object", "model", "created", "index"):
-                value = getattr(chunks[0], key, None)
-                if value is not None:
-                    combined[key] = value
-
-        return combined
-
-    def build_messages(self, prompt, conversation) -> List[dict]:
-        messages = []
-
+        system = prompt.system or next(
+            (turn.prompt.system for turn in past_turns if turn.prompt.system), None
+        )
         system_message = "\n".join(filter(None, (
-            prompt.system,
+            system,
             "Do not include bracketed numeric citation markers like [1], [2]; integrate sources naturally without inline citation tokens."
             if prompt.options.include_citations is False else None
         )))
 
+        items = []
         if system_message:
-            messages.append({"role": "system", "content": system_message})
+            items.append({"role": "system", "content": system_message})
 
-        if conversation:
-            for response in conversation.responses:
-                messages.extend(
-                    [
-                        {
-                            "role": "user",
-                            "content": response.prompt.prompt,
-                        },
-                        {"role": "assistant", "content": response.text()},
-                    ]
-                )
+        for turn in past_turns:
+            items.append({"role": "user", "content": turn.prompt.prompt})
+            items.append({"role": "assistant", "content": strip_citations(turn.text())})
 
-        # Handle multi-modal input (text + image)
-        if prompt.options.image_path:
-            import base64
-            import mimetypes
+        items.append({"role": "user", "content": self._user_content(prompt)})
+        return items
 
-            image_path = prompt.options.image_path
-            mime_type, _ = mimetypes.guess_type(image_path)
-            if not mime_type or not mime_type.startswith('image/'):
-                mime_type = 'image/png'
+    @staticmethod
+    def _user_content(prompt):
+        image_path = prompt.options.image_path
+        if not image_path:
+            return prompt.prompt
 
-            try:
-                with open(image_path, 'rb') as img_file:
-                    encoded_image = base64.b64encode(img_file.read()).decode('utf-8')
+        mime_type, _ = mimetypes.guess_type(image_path)
+        if not mime_type or not mime_type.startswith("image/"):
+            mime_type = "image/png"
 
-                messages.append({
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt.prompt
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:{mime_type};base64,{encoded_image}"
-                            }
-                        }
-                    ]
-                })
-            except (FileNotFoundError, OSError) as e:
-                raise llm.ModelError(f"Error processing image: {str(e)}")
-        else:
-            messages.append({"role": "user", "content": prompt.prompt})
+        try:
+            with open(image_path, "rb") as img_file:
+                encoded_image = base64.b64encode(img_file.read()).decode("utf-8")
+        except OSError as e:
+            raise llm.ModelError(f"Error processing image: {str(e)}")
 
-        return messages
+        return [
+            {"type": "input_text", "text": prompt.prompt},
+            {"type": "input_image", "image_url": f"data:{mime_type};base64,{encoded_image}"},
+        ]
+
+    def build_request(self, prompt, conversation, stream: bool) -> dict:
+        options = prompt.options
+        request = {
+            "input": self.build_input(prompt, conversation),
+            "stream": stream,
+            "extra_body": {"preset": PRESETS[self.model_id]},
+        }
+        if options.max_tokens is not None:
+            request["max_output_tokens"] = options.max_tokens
+        if options.temperature is not None:
+            request["temperature"] = options.temperature
+        if options.top_p is not None:
+            request["top_p"] = options.top_p
+        if options.reasoning_effort:
+            request["reasoning"] = {"effort": options.reasoning_effort}
+
+        tool = web_search_tool(options)
+        if tool:
+            request["tools"] = [tool]
+        return request
 
     def set_usage(self, response, usage):
         if not usage:
             return
 
-        input_tokens = usage.get("prompt_tokens", 0)
-        output_tokens = usage.get("completion_tokens", 0)
         details = {k: v for k, v in usage.items()
-                   if k not in ("prompt_tokens", "completion_tokens", "total_tokens")}
+                   if k not in ("input_tokens", "output_tokens", "total_tokens")}
         response.set_usage(
-            input=input_tokens, output=output_tokens, details=simplify_usage_dict(details)
+            input=usage.get("input_tokens", 0),
+            output=usage.get("output_tokens", 0),
+            details=simplify_usage_dict(details),
         )
 
     @staticmethod
-    def format_citations(citations, prefix="\n\n## Citations:\n") -> str:
+    def format_citations(citations, prefix=CITATIONS_HEADING) -> str:
         if not citations:
             return ""
 
         formatted = prefix
         for i, citation in enumerate(citations, 1):
-            if isinstance(citation, dict) and "url" in citation:
-                citation_text = citation["url"]
-                if "title" in citation:
-                    citation_text = f"{citation['title']} - {citation_text}"
-                formatted += f"[{i}] {citation_text}\n"
-            else:
-                formatted += f"[{i}] {citation}\n"
+            title = citation.get("title")
+            citation_text = f"{title} - {citation['url']}" if title else citation["url"]
+            formatted += f"[{i}] {citation_text}\n"
         return formatted
 
-    @staticmethod
-    def _get_citations(obj):
-        """Extract citations from a response object, checking both new and legacy fields."""
-        if hasattr(obj, "search_results") and obj.search_results:
-            return obj.search_results
-        if hasattr(obj, "citations") and obj.citations:
-            return obj.citations
-        return None
+    def execute(self, prompt, stream, response, conversation, key=None):
+        client = OpenAI(
+            api_key=self.get_key(key),
+            base_url=self.base_url,
+            default_headers={"X-Pplx-Integration": integration_header()},
+        )
+        request = self.build_request(prompt, conversation, stream)
 
-    def execute(self, prompt, stream, response, conversation):
-        if prompt.options.use_openrouter:
-            if not any(p["name"] == "llm-openrouter" for p in llm.get_plugins()):
-                raise llm.ModelError(
-                    "OpenRouter support requires the llm-openrouter plugin. "
-                    "Install it with: llm install llm-openrouter"
-                )
-            api_key = llm.get_key("openrouter", "LLM_OPENROUTER_KEY")
-            base_url = "https://openrouter.ai/api/v1"
-            model_id = f"perplexity/{self.model_id}"
-            default_headers = None
-        else:
-            api_key = self.get_key()
-            base_url = self.base_url
-            model_id = self.model_id
-            default_headers = {"X-Pplx-Integration": "llm-perplexity"}
+        completed = None
+        try:
+            if stream:
+                for event in client.responses.create(**request):
+                    if event.type == "response.output_text.delta":
+                        yield event.delta
+                    elif event.type in ("response.completed", "response.incomplete", "response.failed"):
+                        completed = event.response
+            else:
+                completed = client.responses.create(**request)
+                yield completed.output_text
+        except APIError as e:
+            raise llm.ModelError(f"Perplexity API error: {e.message}") from e
 
-        client = OpenAI(api_key=api_key, base_url=base_url, default_headers=default_headers)
+        if completed is None:
+            raise llm.ModelError("Perplexity ended the stream without a final response")
 
-        kwargs = {
-            "model": model_id,
-            "messages": self.build_messages(prompt, conversation),
-            "stream": stream,
-            "max_tokens": prompt.options.max_tokens or None,
-        }
+        # The openai SDK has no type for Perplexity's search_results output item,
+        # so serialising with warnings on prints a pydantic warning per request
+        response_data = completed.model_dump(warnings=False)
+        response.response_json = remove_dict_none_values(response_data)
+        response._prompt_json = {"input": request["input"]}
 
-        if prompt.options.top_p:
-            kwargs["top_p"] = prompt.options.top_p
-        else:
-            kwargs["temperature"] = prompt.options.temperature
+        failure = failure_message(response_data)
+        if failure:
+            raise llm.ModelError(f"Perplexity API error: {failure}")
 
-        if prompt.options.stop:
-            kwargs["stop"] = prompt.options.stop
-
-        # Perplexity-specific parameters go in extra_body since the
-        # openai client rejects non-standard kwargs
-        extra = {}
-
-        if prompt.options.top_k:
-            extra["top_k"] = prompt.options.top_k
-
-        # Search parameters
-        if prompt.options.search_recency_filter:
-            extra["search_recency_filter"] = prompt.options.search_recency_filter
-
-        if prompt.options.search_domain_filter:
-            domains = [d.strip() for d in prompt.options.search_domain_filter.split(",") if d.strip()]
-            if domains:
-                extra["search_domain_filter"] = ",".join(domains)
-
-        if prompt.options.search_type:
-            extra["web_search_options"] = {"search_type": prompt.options.search_type}
-
-        if prompt.options.search_mode:
-            extra["search_mode"] = prompt.options.search_mode
-
-        if prompt.options.disable_search:
-            extra["disable_search"] = prompt.options.disable_search
-
-        if prompt.options.search_language_filter:
-            extra["search_language_filter"] = prompt.options.search_language_filter
-
-        # Generation parameters
-        if prompt.options.reasoning_effort:
-            extra["reasoning_effort"] = prompt.options.reasoning_effort
-
-        if prompt.options.return_images:
-            extra["return_images"] = prompt.options.return_images
-
-        if prompt.options.return_related_questions:
-            extra["return_related_questions"] = prompt.options.return_related_questions
-
-        if prompt.options.language_preference:
-            extra["language_preference"] = prompt.options.language_preference
-
-        if extra:
-            kwargs["extra_body"] = extra
-
-        if stream:
-            completion = client.chat.completions.create(**kwargs)
-            chunks = []
-            usage = None
-            citations = None
-
-            for chunk in completion:
-                chunks.append(chunk)
-                if hasattr(chunk, "usage") and chunk.usage:
-                    usage = chunk.usage.model_dump()
-                chunk_citations = self._get_citations(chunk)
-                if chunk_citations:
-                    citations = chunk_citations
-                try:
-                    content = chunk.choices[0].delta.content
-                except IndexError:
-                    content = None
-                if content is not None:
-                    yield content
-            response.response_json = remove_dict_none_values(Perplexity.combine_chunks(chunks))
-
-            if citations and prompt.options.include_citations:
-                yield self.format_citations(citations)
-
-        else:
-            completion = client.chat.completions.create(**kwargs)
-            response.response_json = remove_dict_none_values(completion.model_dump())
-            usage = completion.usage.model_dump()
-            yield completion.choices[0].message.content
-            citations = self._get_citations(completion)
-            if citations and prompt.options.include_citations:
-                yield self.format_citations(citations)
-        self.set_usage(response, usage)
-        response._prompt_json = {"messages": kwargs["messages"]}
+        sources = search_results(response_data)
+        if sources and prompt.options.include_citations:
+            yield self.format_citations(sources)
+        self.set_usage(response, response_data.get("usage"))
 
     def __str__(self):
         return f"Perplexity: {self.model_id}"
