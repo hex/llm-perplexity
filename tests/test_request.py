@@ -6,7 +6,7 @@ from types import SimpleNamespace
 import llm
 import pytest
 
-from llm_perplexity import strip_citations
+from llm_perplexity import strip_citations, web_search_tool
 
 ONE_PIXEL_PNG = bytes.fromhex(
     "89504e470d0a1a0a0000000d4948445200000001000000010802000000907753de"
@@ -111,3 +111,84 @@ def test_missing_image_raises_model_error(tmp_path):
         model.build_input(
             make_prompt("What is this?", image_path=str(tmp_path / "absent.png")), None
         )
+
+
+@pytest.mark.parametrize(
+    "model_id,preset",
+    [
+        ("sonar", "fast"),
+        ("sonar-pro", "low"),
+        ("sonar-reasoning-pro", "medium"),
+        ("sonar-deep-research", "high"),
+    ],
+)
+def test_each_model_id_selects_its_preset(model_id, preset):
+    model = llm.get_model(model_id)
+    prompt = llm.Prompt("Hello", model=model, options=model.Options())
+    assert model.build_request(prompt, None, stream=False) == {
+        "input": [{"role": "user", "content": "Hello"}],
+        "stream": False,
+        "extra_body": {"preset": preset},
+    }
+
+
+def test_generation_options_map_to_responses_arguments():
+    model = llm.get_model("sonar")
+    request = model.build_request(
+        make_prompt("Hello", max_tokens=50, temperature=0, reasoning_effort="low"),
+        None,
+        stream=True,
+    )
+    assert request["max_output_tokens"] == 50
+    assert request["temperature"] == 0
+    assert request["reasoning"] == {"effort": "low"}
+    assert request["stream"] is True
+    assert "top_p" not in request
+    assert "tools" not in request
+
+
+def test_top_p_is_sent_when_set():
+    model = llm.get_model("sonar")
+    request = model.build_request(make_prompt("Hello", top_p=0.9), None, stream=False)
+    assert request["top_p"] == 0.9
+    assert "temperature" not in request
+
+
+def test_no_search_options_means_no_tool_override():
+    model = llm.get_model("sonar")
+    assert web_search_tool(model.Options()) is None
+
+
+def test_search_options_configure_the_web_search_tool():
+    model = llm.get_model("sonar")
+    options = model.Options(
+        search_context_size="high",
+        search_domain_filter="example.com, -example.org",
+        search_recency_filter="week",
+    )
+    assert web_search_tool(options) == {
+        "type": "web_search",
+        "search_context_size": "high",
+        "filters": {
+            "search_domain_filter": ["example.com", "-example.org"],
+            "search_recency_filter": "week",
+        },
+    }
+
+
+def test_context_size_alone_sends_no_filters():
+    model = llm.get_model("sonar")
+    assert web_search_tool(model.Options(search_context_size="low")) == {
+        "type": "web_search",
+        "search_context_size": "low",
+    }
+
+
+def test_search_tool_is_included_in_the_request():
+    model = llm.get_model("sonar")
+    request = model.build_request(
+        make_prompt("Hello", search_recency_filter="day"), None, stream=False
+    )
+    assert request["tools"] == [
+        {"type": "web_search", "filters": {"search_recency_filter": "day"}}
+    ]

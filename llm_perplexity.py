@@ -10,15 +10,6 @@ from openai import OpenAI
 from pydantic import Field, field_validator, model_validator
 from typing import Optional, List, Dict, Literal
 
-# Available models - Updated as of 2026-02-25
-# https://docs.perplexity.ai/models/model-cards
-MODELS = [
-    "sonar",
-    "sonar-pro",
-    "sonar-deep-research",
-    "sonar-reasoning-pro",
-]
-
 CITATIONS_HEADING = "\n\n## Citations:\n"
 
 
@@ -27,9 +18,40 @@ def strip_citations(text: str) -> str:
     return text.split(CITATIONS_HEADING, 1)[0]
 
 
+# Perplexity's suggested Agent API preset for each Sonar model id
+# https://docs.perplexity.ai/docs/agent-api/migrate-from-sonar/how-to
+PRESETS = {
+    "sonar": "fast",
+    "sonar-pro": "low",
+    "sonar-reasoning-pro": "medium",
+    "sonar-deep-research": "high",
+}
+
+
+def web_search_tool(options) -> Optional[dict]:
+    """Build the web_search tool entry, or None when no search option is set."""
+    filters = {}
+    if options.search_domain_filter:
+        filters["search_domain_filter"] = [
+            d.strip() for d in options.search_domain_filter.split(",") if d.strip()
+        ]
+    if options.search_recency_filter:
+        filters["search_recency_filter"] = options.search_recency_filter
+
+    if not filters and not options.search_context_size:
+        return None
+
+    tool = {"type": "web_search"}
+    if options.search_context_size:
+        tool["search_context_size"] = options.search_context_size
+    if filters:
+        tool["filters"] = filters
+    return tool
+
+
 @llm.hookimpl
 def register_models(register):
-    for model_id in MODELS:
+    for model_id in PRESETS:
         register(Perplexity(model_id))
 
 class PerplexityOptions(llm.Options):
@@ -227,6 +249,27 @@ class Perplexity(llm.Model):
             {"type": "input_text", "text": prompt.prompt},
             {"type": "input_image", "image_url": f"data:{mime_type};base64,{encoded_image}"},
         ]
+
+    def build_request(self, prompt, conversation, stream) -> dict:
+        options = prompt.options
+        request = {
+            "input": self.build_input(prompt, conversation),
+            "stream": stream,
+            "extra_body": {"preset": PRESETS[self.model_id]},
+        }
+        if options.max_tokens is not None:
+            request["max_output_tokens"] = options.max_tokens
+        if options.temperature is not None:
+            request["temperature"] = options.temperature
+        if options.top_p is not None:
+            request["top_p"] = options.top_p
+        if options.reasoning_effort:
+            request["reasoning"] = {"effort": options.reasoning_effort}
+
+        tool = web_search_tool(options)
+        if tool:
+            request["tools"] = [tool]
+        return request
 
     def set_usage(self, response, usage):
         if not usage:
