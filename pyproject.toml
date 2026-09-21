@@ -10,8 +10,8 @@ readme = "README.md"
 authors = [{name = "hex"}]
 license = {text = "Apache-2.0"}
 dependencies = [
-    "llm>=0.35",
-    "openai>=3.16.2",
+    "llm>=0.26",
+    "openai>=1.109.1",
 ]
 requires-python = ">=3.10"
 
