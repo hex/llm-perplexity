@@ -83,6 +83,25 @@ def register_models(register):
     for model_id in PRESETS:
         register(Perplexity(model_id))
 
+# Options the Agent API has no equivalent for, with the value llm logged for
+# each when the user had not set it. Logged conversations still carry them.
+UNSUPPORTED_OPTION_DEFAULTS = {
+    "top_k": None,
+    "stream": True,
+    "presence_penalty": None,
+    "frequency_penalty": None,
+    "search_type": None,
+    "search_mode": None,
+    "disable_search": None,
+    "search_language_filter": None,
+    "return_images": None,
+    "return_related_questions": False,
+    "language_preference": None,
+    "stop": None,
+    "use_openrouter": False,
+}
+
+
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
         description="The maximum number of output tokens the model may generate.",
@@ -128,6 +147,20 @@ class PerplexityOptions(llm.Options):
         description="Include formatted citations section in the text output (does not affect JSON response)",
         default=True,
     )
+
+    @model_validator(mode="before")
+    @classmethod
+    def discard_unsupported_options_left_at_their_default(cls, values):
+        if not isinstance(values, dict):
+            return values
+        return {
+            name: value
+            for name, value in values.items()
+            if not (
+                name in UNSUPPORTED_OPTION_DEFAULTS
+                and value in (None, UNSUPPORTED_OPTION_DEFAULTS[name])
+            )
+        }
 
     @field_validator("temperature")
     @classmethod

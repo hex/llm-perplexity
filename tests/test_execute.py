@@ -1,7 +1,12 @@
 # ABOUTME: Cassette-backed tests for Perplexity.execute against the Agent API.
 # ABOUTME: Covers non-streaming, streaming, citations, usage and API errors.
+import json
+
 import llm
 import pytest
+import sqlite_utils
+from llm.cli import load_conversation
+from llm.migrations import migrate
 
 from llm_perplexity import failure_message, integration_header, search_results
 
@@ -98,3 +103,35 @@ def test_rejected_key_raises_model_error(monkeypatch):
     monkeypatch.setenv("LLM_PERPLEXITY_KEY", "pplx-invalid-key")
     with pytest.raises(llm.ModelError):
         llm.get_model("sonar").prompt("Hello", stream=False).text()
+
+
+def test_a_conversation_logged_before_the_agent_api_still_loads_with_c(tmp_path):
+    db_path = tmp_path / "logs.db"
+    db = sqlite_utils.Database(str(db_path))
+    migrate(db)
+    db["conversations"].insert({"id": "conv1", "name": "capital", "model": "sonar"})
+    db["responses"].insert(
+        {
+            "id": "resp1",
+            "model": "sonar",
+            "prompt": "Capital of France?",
+            "system": None,
+            "prompt_json": None,
+            "options_json": json.dumps(
+                {"temperature": 1.0, "stream": True, "use_openrouter": False}
+            ),
+            "response": "Paris.",
+            "response_json": None,
+            "conversation_id": "conv1",
+            "duration_ms": 10,
+            "datetime_utc": "2026-01-01T00:00:00",
+            "input_tokens": 1,
+            "output_tokens": 1,
+            "token_details": None,
+            "schema_id": None,
+            "resolved_model": None,
+            "reasoning": None,
+        }
+    )
+    conversation = load_conversation("conv1", database=str(db_path))
+    assert conversation.responses[0].prompt.options.temperature == 1.0
