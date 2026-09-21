@@ -52,10 +52,10 @@ llm -m sonar-reasoning-pro 'Problem solving task'
 
 ### Advanced Options
 
-The plugin supports these parameters to customize model behavior. Some underlying models ignore `temperature` and `top_p`.
+The plugin supports these parameters to customize model behavior. Some underlying models ignore `temperature` and `top_p`. Setting both is an error.
 
 ```bash
-# Control randomness (0.0 to 2.0, higher = more random)
+# Control randomness (0.0 up to but not including 2.0, higher = more random)
 llm -m sonar-pro --option temperature 0.7 'Generate creative ideas'
 
 # Nucleus sampling threshold (alternative to temperature)
@@ -100,7 +100,7 @@ llm -m sonar-pro --option image_path /path/to/diagram.png 'Explain the process s
 
 `image_path` sends the image as an `input_image` part alongside the prompt text. `llm`'s own `-a` attachment flag is not supported yet. In a conversation, the plugin sends only the current turn's image and does not re-send images from earlier turns.
 
-Note: Only certain Perplexity models support image inputs. Currently the plugin supports PNG, JPEG, and GIF.
+Note: Only certain Perplexity models support image inputs. The plugin forwards any `image/*` file; PNG, JPEG, and GIF are what Perplexity's models accept, not a plugin restriction.
 
 ## Changes in 2026.9.0
 
@@ -122,9 +122,13 @@ This release moved the plugin from Perplexity's Sonar chat completions API to th
 
 Anyone using `use_openrouter` to route through OpenRouter should install the [llm-openrouter](https://github.com/simonw/llm-openrouter) plugin instead.
 
+Conversations logged before this upgrade still work with `llm -c`. A default saved with `llm models options set`, or an alias or template, that carries one of the options above now fails; check with `llm models options show <model>` and clear it.
+
+`--key` now works. Earlier the plugin silently ignored it.
+
 The logged response JSON (`llm logs --json`) now has the Agent API shape. Sources sit under an `output` item of type `search_results`, each with `title`, `url`, `date`, `last_updated`, and `snippet`. The old top-level `citations`, `search_results`, and `choices` keys are gone.
 
-A response Perplexity reports as failed now raises an error instead of returning empty text. The plugin sends `max_tokens` to the API as `max_output_tokens`; a response cut off by it still comes back with status `completed`.
+A response Perplexity reports as failed now raises an error instead of returning empty text. The plugin sends `max_tokens` to the API as `max_output_tokens`; in testing, a response cut short by it still reported status `completed`.
 
 This release also raises the minimum versions to `llm>=0.26`, `openai>=1.109.1`, and Python `>=3.10`.
 
