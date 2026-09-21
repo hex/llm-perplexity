@@ -43,8 +43,18 @@ def test_unsupported_options_are_rejected(option_name, unsupported_value):
     import llm
 
     options_class = llm.get_model("sonar").Options
-    with pytest.raises(ValueError, match="Extra inputs are not permitted"):
+    with pytest.raises(ValueError, match=f"{option_name} is not supported by Perplexity's Agent API"):
         options_class(**{option_name: unsupported_value})
+
+
+def test_the_unsupported_option_error_points_at_the_readme():
+    with pytest.raises(ValueError, match='See "Changes in 2026.9.0" in the llm-perplexity README'):
+        PerplexityOptions(return_images=True)
+
+
+def test_the_use_openrouter_error_names_the_openrouter_plugin():
+    with pytest.raises(ValueError, match="llm-openrouter"):
+        PerplexityOptions(use_openrouter=True)
 
 
 def test_options_logged_before_the_agent_api_still_load():
@@ -70,7 +80,7 @@ def test_options_logged_before_the_agent_api_still_load():
 def test_unsupported_options_set_deliberately_are_still_rejected(option_name, deliberate_value):
     import llm
 
-    with pytest.raises(ValueError, match="Extra inputs are not permitted"):
+    with pytest.raises(ValueError, match=f"{option_name} is not supported by Perplexity's Agent API"):
         llm.get_model("sonar").Options(**{option_name: deliberate_value})
 
 

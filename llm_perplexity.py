@@ -106,6 +106,17 @@ UNSUPPORTED_OPTION_DEFAULTS = {
 }
 
 
+def unsupported_option_message(name: str) -> str:
+    """Tell the user an option is unsupported and where the alternatives are listed."""
+    message = (
+        f"{name} is not supported by Perplexity's Agent API. "
+        'See "Changes in 2026.9.0" in the llm-perplexity README.'
+    )
+    if name == "use_openrouter":
+        message += " To route through OpenRouter, install the llm-openrouter plugin."
+    return message
+
+
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
         description="The maximum number of output tokens the model may generate.",
@@ -157,14 +168,13 @@ class PerplexityOptions(llm.Options):
     def discard_unsupported_options_left_at_their_default(cls, values):
         if not isinstance(values, dict):
             return values
-        return {
-            name: value
-            for name, value in values.items()
-            if not (
-                name in UNSUPPORTED_OPTION_DEFAULTS
-                and (value is None or value is UNSUPPORTED_OPTION_DEFAULTS[name])
-            )
-        }
+        supported = {}
+        for name, value in values.items():
+            if name not in UNSUPPORTED_OPTION_DEFAULTS:
+                supported[name] = value
+            elif not (value is None or value is UNSUPPORTED_OPTION_DEFAULTS[name]):
+                raise ValueError(unsupported_option_message(name))
+        return supported
 
     @field_validator("temperature")
     @classmethod
