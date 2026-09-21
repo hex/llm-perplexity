@@ -201,7 +201,7 @@ class PerplexityOptions(llm.Options):
         return self
 
 
-class Perplexity(llm.Model):
+class Perplexity(llm.KeyModel):
     needs_key = "perplexity"
     key_env_var = "LLM_PERPLEXITY_KEY"
     model_id = "perplexity"
@@ -307,9 +307,9 @@ class Perplexity(llm.Model):
                 formatted += f"[{i}] {citation}\n"
         return formatted
 
-    def execute(self, prompt, stream, response, conversation):
+    def execute(self, prompt, stream, response, conversation, key=None):
         client = OpenAI(
-            api_key=self.get_key(),
+            api_key=self.get_key(key),
             base_url=self.base_url,
             default_headers={"X-Pplx-Integration": integration_header()},
         )

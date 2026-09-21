@@ -1,0 +1,138 @@
+interactions:
+- request:
+    body: '{"input":[{"role":"user","content":"What is the capital of France? One
+      word."}],"stream":false,"preset":"fast"}'
+    headers:
+      accept:
+      - application/json
+      accept-encoding:
+      - gzip, deflate
+      connection:
+      - keep-alive
+      content-length:
+      - '111'
+      content-type:
+      - application/json
+      host:
+      - api.perplexity.ai
+      user-agent:
+      - OpenAI/Python 3.16.2
+      x-pplx-integration:
+      - llm-perplexity/2026.9.0
+      x-stainless-arch:
+      - arm64
+      x-stainless-async:
+      - 'false'
+      x-stainless-lang:
+      - python
+      x-stainless-os:
+      - MacOS
+      x-stainless-package-version:
+      - 3.16.2
+      x-stainless-read-timeout:
+      - '600'
+      x-stainless-retry-count:
+      - '0'
+      x-stainless-runtime:
+      - CPython
+      x-stainless-runtime-version:
+      - 3.12.9
+    method: POST
+    uri: https://api.perplexity.ai/v1/responses
+  response:
+    body:
+      string: !!binary |
+        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
+        JpCD+41vtqYMSXblmhy9/93/ADKzbOwGHAAA
+    headers:
+      access-control-allow-origin:
+      - '*'
+      alt-svc:
+      - h3=":443"; ma=86400
+      cf-cache-status:
+      - DYNAMIC
+      cf-ray:
+      - a3e8bfc86f86e3e9-OTP
+      connection:
+      - keep-alive
+      content-encoding:
+      - gzip
+      content-type:
+      - application/json
+      date:
+      - Mon, 21 Sep 2026 11:32:26 GMT
+      server:
+      - cloudflare
+      set-cookie:
+      - __cf_bm=YEub3h2HHnTa0JRoKoAaCblvM6NKkpV.2N6H655zOWQ-1789990345.0328808-1.0.1.1-eIYeX1H0rnuLWCu6DOFlgLDm9MSw3kbFw3QNP8m2iLEcVpooz5dmGMajHtD48U4Rkf2p5Sr5SEcpeMHkeSH4EBVf3IqRGnf7EqBKlC1P2aBWA9XprL6XF9ObLUCDI3Ui;
+        HttpOnly; SameSite=None; Secure; Path=/; Domain=perplexity.ai; Expires=Mon,
+        21 Sep 2026 12:02:26 GMT
+      - __cflb=04dToWaRite5R1fQA5HfyWsXiTjNxDHjTbGRRCeGE9; HttpOnly; SameSite=None;
+        Secure; Path=/; Expires=Mon, 21 Sep 2026 12:02:26 GMT
+      strict-transport-security:
+      - max-age=15552000; includeSubDomains; preload
+      transfer-encoding:
+      - chunked
+      x-ratelimit-limit:
+      - '1'
+      x-ratelimit-remaining:
+      - '0'
+      x-ratelimit-reset:
+      - '1789990347'
+      x-ratelimit-used:
+      - '1'
+      x-request-id:
+      - c5b71239-c42e-405a-99c6-0642855e1eca
+    status:
+      code: 200
+      message: OK
+version: 1

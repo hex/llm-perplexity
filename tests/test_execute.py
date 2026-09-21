@@ -1,6 +1,7 @@
 # ABOUTME: Cassette-backed tests for Perplexity.execute against the Agent API.
 # ABOUTME: Covers non-streaming, streaming, citations, usage and API errors.
 import json
+import os
 
 import llm
 import pytest
@@ -135,3 +136,14 @@ def test_a_conversation_logged_before_the_agent_api_still_loads_with_c(tmp_path)
     )
     conversation = load_conversation("conv1", database=str(db_path))
     assert conversation.responses[0].prompt.options.temperature == 1.0
+
+
+@pytest.mark.vcr
+def test_a_key_passed_to_prompt_is_used(monkeypatch):
+    monkeypatch.delenv("LLM_PERPLEXITY_KEY")
+    response = llm.get_model("sonar").prompt(
+        "What is the capital of France? One word.",
+        stream=False,
+        key=os.environ.get("PERPLEXITY_API_KEY", "pplx-test-key"),
+    )
+    assert "Paris" in response.text()
