@@ -296,13 +296,16 @@ class Perplexity(llm.KeyModel):
 
     @staticmethod
     def format_citations(citations, prefix=CITATIONS_HEADING) -> str:
-        if not citations:
+        citation_texts = [
+            " - ".join(filter(None, (citation.get("title"), citation.get("url"))))
+            for citation in citations or []
+        ]
+        printable = list(filter(None, citation_texts))
+        if not printable:
             return ""
 
         formatted = prefix
-        for i, citation in enumerate(citations, 1):
-            title = citation.get("title")
-            citation_text = f"{title} - {citation['url']}" if title else citation["url"]
+        for i, citation_text in enumerate(printable, 1):
             formatted += f"[{i}] {citation_text}\n"
         return formatted
 

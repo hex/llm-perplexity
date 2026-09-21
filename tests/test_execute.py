@@ -60,6 +60,25 @@ def test_format_citations_prints_the_url_alone_when_a_source_has_no_title():
     assert formatted == "\n\n## Citations:\n[1] https://example.com\n"
 
 
+def test_format_citations_prints_the_title_alone_when_a_source_has_no_url():
+    model = llm.get_model("sonar")
+    formatted = model.format_citations([{"title": "Example"}])
+    assert formatted == "\n\n## Citations:\n[1] Example\n"
+
+
+def test_format_citations_skips_a_source_with_neither_title_nor_url():
+    model = llm.get_model("sonar")
+    formatted = model.format_citations(
+        [{"url": "https://example.com"}, {"snippet": "text"}, {"url": "https://example.org"}]
+    )
+    assert formatted == "\n\n## Citations:\n[1] https://example.com\n[2] https://example.org\n"
+
+
+@pytest.mark.parametrize("sources", [[], [{"snippet": "text"}]])
+def test_format_citations_is_empty_when_no_source_can_be_printed(sources):
+    assert llm.get_model("sonar").format_citations(sources) == ""
+
+
 @pytest.mark.vcr
 def test_non_streaming_prompt():
     response = llm.get_model("sonar").prompt(
