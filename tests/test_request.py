@@ -141,6 +141,22 @@ def test_missing_image_raises_model_error(tmp_path):
         )
 
 
+def test_an_image_file_without_an_extension_is_sent_as_png(tmp_path):
+    image = tmp_path / "pixel"
+    image.write_bytes(ONE_PIXEL_PNG)
+    model = llm.get_model("sonar")
+    items = model.build_input(make_prompt("What is this?", image_path=str(image)), None)
+    assert items[0]["content"][1]["image_url"].startswith("data:image/png;base64,")
+
+
+def test_a_file_that_is_not_an_image_raises_model_error(tmp_path):
+    notes = tmp_path / "notes.txt"
+    notes.write_text("not an image")
+    model = llm.get_model("sonar")
+    with pytest.raises(llm.ModelError, match=r"notes\.txt is text/plain, not an image"):
+        model.build_input(make_prompt("What is this?", image_path=str(notes)), None)
+
+
 @pytest.mark.parametrize(
     "model_id,preset",
     [

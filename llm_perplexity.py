@@ -247,8 +247,10 @@ class Perplexity(llm.KeyModel):
             return prompt.prompt
 
         mime_type, _ = mimetypes.guess_type(image_path)
-        if not mime_type or not mime_type.startswith("image/"):
+        if not mime_type:
             mime_type = "image/png"
+        elif not mime_type.startswith("image/"):
+            raise llm.ModelError(f"Error processing image: {image_path} is {mime_type}, not an image")
 
         try:
             with open(image_path, "rb") as img_file:
