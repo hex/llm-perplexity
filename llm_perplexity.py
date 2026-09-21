@@ -1,3 +1,6 @@
+import base64
+import mimetypes
+
 import llm
 from llm.utils import (
     remove_dict_none_values,
@@ -15,6 +18,14 @@ MODELS = [
     "sonar-deep-research",
     "sonar-reasoning-pro",
 ]
+
+CITATIONS_HEADING = "\n\n## Citations:\n"
+
+
+def strip_citations(text: str) -> str:
+    """Remove the citations section that format_citations appends to response text."""
+    return text.split(CITATIONS_HEADING, 1)[0]
+
 
 @llm.hookimpl
 def register_models(register):
@@ -173,65 +184,49 @@ class Perplexity(llm.Model):
 
         return combined
 
-    def build_messages(self, prompt, conversation) -> List[dict]:
-        messages = []
+    def build_input(self, prompt, conversation) -> List[dict]:
+        past_turns = conversation.responses if conversation else []
 
+        system = prompt.system or next(
+            (turn.prompt.system for turn in past_turns if turn.prompt.system), None
+        )
         system_message = "\n".join(filter(None, (
-            prompt.system,
+            system,
             "Do not include bracketed numeric citation markers like [1], [2]; integrate sources naturally without inline citation tokens."
             if prompt.options.include_citations is False else None
         )))
 
+        items = []
         if system_message:
-            messages.append({"role": "system", "content": system_message})
+            items.append({"role": "system", "content": system_message})
 
-        if conversation:
-            for response in conversation.responses:
-                messages.extend(
-                    [
-                        {
-                            "role": "user",
-                            "content": response.prompt.prompt,
-                        },
-                        {"role": "assistant", "content": response.text()},
-                    ]
-                )
+        for turn in past_turns:
+            items.append({"role": "user", "content": turn.prompt.prompt})
+            items.append({"role": "assistant", "content": strip_citations(turn.text())})
 
-        # Handle multi-modal input (text + image)
-        if prompt.options.image_path:
-            import base64
-            import mimetypes
+        items.append({"role": "user", "content": self._user_content(prompt)})
+        return items
 
-            image_path = prompt.options.image_path
-            mime_type, _ = mimetypes.guess_type(image_path)
-            if not mime_type or not mime_type.startswith('image/'):
-                mime_type = 'image/png'
+    @staticmethod
+    def _user_content(prompt):
+        image_path = prompt.options.image_path
+        if not image_path:
+            return prompt.prompt
 
-            try:
-                with open(image_path, 'rb') as img_file:
-                    encoded_image = base64.b64encode(img_file.read()).decode('utf-8')
+        mime_type, _ = mimetypes.guess_type(image_path)
+        if not mime_type or not mime_type.startswith("image/"):
+            mime_type = "image/png"
 
-                messages.append({
-                    "role": "user",
-                    "content": [
-                        {
-                            "type": "text",
-                            "text": prompt.prompt
-                        },
-                        {
-                            "type": "image_url",
-                            "image_url": {
-                                "url": f"data:{mime_type};base64,{encoded_image}"
-                            }
-                        }
-                    ]
-                })
-            except (FileNotFoundError, OSError) as e:
-                raise llm.ModelError(f"Error processing image: {str(e)}")
-        else:
-            messages.append({"role": "user", "content": prompt.prompt})
+        try:
+            with open(image_path, "rb") as img_file:
+                encoded_image = base64.b64encode(img_file.read()).decode("utf-8")
+        except OSError as e:
+            raise llm.ModelError(f"Error processing image: {str(e)}")
 
-        return messages
+        return [
+            {"type": "input_text", "text": prompt.prompt},
+            {"type": "input_image", "image_url": f"data:{mime_type};base64,{encoded_image}"},
+        ]
 
     def set_usage(self, response, usage):
         if not usage:
@@ -246,7 +241,7 @@ class Perplexity(llm.Model):
         )
 
     @staticmethod
-    def format_citations(citations, prefix="\n\n## Citations:\n") -> str:
+    def format_citations(citations, prefix=CITATIONS_HEADING) -> str:
         if not citations:
             return ""
 
