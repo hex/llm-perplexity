@@ -74,6 +74,15 @@ def test_unsupported_options_set_deliberately_are_still_rejected(option_name, de
         llm.get_model("sonar").Options(**{option_name: deliberate_value})
 
 
+@pytest.mark.parametrize(
+    "option_name,number_equal_to_the_default",
+    [("stream", 1), ("stream", 1.0), ("return_related_questions", 0), ("use_openrouter", 0)],
+)
+def test_a_number_equal_to_a_boolean_default_is_rejected(option_name, number_equal_to_the_default):
+    with pytest.raises(ValueError):
+        PerplexityOptions(**{option_name: number_equal_to_the_default})
+
+
 def test_search_context_size_accepts_documented_values():
     for size in ("low", "medium", "high"):
         assert PerplexityOptions(search_context_size=size).search_context_size == size

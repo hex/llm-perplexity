@@ -162,7 +162,7 @@ class PerplexityOptions(llm.Options):
             for name, value in values.items()
             if not (
                 name in UNSUPPORTED_OPTION_DEFAULTS
-                and value in (None, UNSUPPORTED_OPTION_DEFAULTS[name])
+                and (value is None or value is UNSUPPORTED_OPTION_DEFAULTS[name])
             )
         }
 
