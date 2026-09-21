@@ -35,6 +35,23 @@ def test_strip_citations_leaves_other_text_alone():
     assert strip_citations("Paris.") == "Paris."
 
 
+def test_strip_citations_leaves_a_heading_followed_by_prose_alone():
+    text = "See the docs.\n\n## Citations:\nFor more on this, read the release notes."
+    assert strip_citations(text) == text
+
+
+def test_strip_citations_removes_only_the_trailing_footer_even_when_the_heading_appears_earlier():
+    text = (
+        "Intro.\n\n## Citations:\n"
+        "Not a citation list, just prose that mentions this.\nMore of the answer here."
+        "\n\n## Citations:\n[1] Example - https://example.com\n"
+    )
+    assert strip_citations(text) == (
+        "Intro.\n\n## Citations:\n"
+        "Not a citation list, just prose that mentions this.\nMore of the answer here."
+    )
+
+
 def test_single_prompt_becomes_one_user_item():
     model = llm.get_model("sonar")
     assert model.build_input(make_prompt("Hello"), None) == [
@@ -82,6 +99,17 @@ def test_disabling_citations_adds_the_no_markers_instruction():
     model = llm.get_model("sonar")
     items = model.build_input(make_prompt("Hello", include_citations=False), None)
     assert items[0]["role"] == "system"
+    assert "Do not include bracketed numeric citation markers" in items[0]["content"]
+
+
+def test_system_prompt_and_disabled_citations_share_one_system_item():
+    model = llm.get_model("sonar")
+    items = model.build_input(
+        make_prompt("Hello", system="Be brief.", include_citations=False), None
+    )
+    assert len(items) == 2
+    assert items[0]["role"] == "system"
+    assert items[0]["content"].startswith("Be brief.\n")
     assert "Do not include bracketed numeric citation markers" in items[0]["content"]
 
 

@@ -45,13 +45,19 @@ def test_failure_message_uses_the_error_the_api_reported():
 def test_failure_message_has_a_fallback_when_no_error_is_given():
     assert (
         failure_message({"status": "failed", "error": None})
-        == "Perplexity reported that the response failed"
+        == "the response failed without an error message"
     )
 
 
 @pytest.mark.parametrize("status", ["completed", "incomplete"])
 def test_failure_message_is_none_for_responses_that_did_not_fail(status):
     assert failure_message({"status": status, "error": None}) is None
+
+
+def test_format_citations_prints_the_url_alone_when_a_source_has_no_title():
+    model = llm.get_model("sonar")
+    formatted = model.format_citations([{"url": "https://example.com"}])
+    assert formatted == "\n\n## Citations:\n[1] https://example.com\n"
 
 
 @pytest.mark.vcr
@@ -66,6 +72,9 @@ def test_non_streaming_prompt():
     assert response.response_json["status"] == "completed"
     assert response.input_tokens > 0
     assert response.output_tokens > 0
+    assert response._prompt_json == {
+        "input": [{"role": "user", "content": "What is the capital of France? One sentence."}]
+    }
 
 
 @pytest.mark.vcr

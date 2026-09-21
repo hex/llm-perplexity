@@ -2,6 +2,7 @@
 # ABOUTME: Maps the Sonar model ids to Agent API presets and formats search citations.
 import base64
 import mimetypes
+import re
 from importlib.metadata import PackageNotFoundError, version
 
 import llm
@@ -16,9 +17,12 @@ from typing import Optional, List, Literal
 CITATIONS_HEADING = "\n\n## Citations:\n"
 
 
+CITATIONS_FOOTER_RE = re.compile(re.escape(CITATIONS_HEADING) + r"(?:\[\d+\] [^\n]*\n?)+\Z")
+
+
 def strip_citations(text: str) -> str:
     """Remove the citations section that format_citations appends to response text."""
-    return text.split(CITATIONS_HEADING, 1)[0]
+    return CITATIONS_FOOTER_RE.sub("", text)
 
 
 # Perplexity's suggested Agent API preset for each Sonar model id
@@ -44,7 +48,7 @@ def web_search_tool(options) -> Optional[dict]:
     if not filters and not options.search_context_size:
         return None
 
-    tool = {"type": "web_search"}
+    tool: dict = {"type": "web_search"}
     if options.search_context_size:
         tool["search_context_size"] = options.search_context_size
     if filters:
@@ -75,7 +79,7 @@ def failure_message(response_data: dict) -> Optional[str]:
     if response_data.get("status") != "failed":
         return None
     error = response_data.get("error") or {}
-    return error.get("message") or "Perplexity reported that the response failed"
+    return error.get("message") or "the response failed without an error message"
 
 
 @llm.hookimpl
@@ -204,7 +208,6 @@ class PerplexityOptions(llm.Options):
 class Perplexity(llm.KeyModel):
     needs_key = "perplexity"
     key_env_var = "LLM_PERPLEXITY_KEY"
-    model_id = "perplexity"
     can_stream = True
     base_url = "https://api.perplexity.ai/v1"
 
@@ -258,7 +261,7 @@ class Perplexity(llm.KeyModel):
             {"type": "input_image", "image_url": f"data:{mime_type};base64,{encoded_image}"},
         ]
 
-    def build_request(self, prompt, conversation, stream) -> dict:
+    def build_request(self, prompt, conversation, stream: bool) -> dict:
         options = prompt.options
         request = {
             "input": self.build_input(prompt, conversation),
@@ -298,13 +301,9 @@ class Perplexity(llm.KeyModel):
 
         formatted = prefix
         for i, citation in enumerate(citations, 1):
-            if isinstance(citation, dict) and "url" in citation:
-                citation_text = citation["url"]
-                if "title" in citation:
-                    citation_text = f"{citation['title']} - {citation_text}"
-                formatted += f"[{i}] {citation_text}\n"
-            else:
-                formatted += f"[{i}] {citation}\n"
+            title = citation.get("title")
+            citation_text = f"{title} - {citation['url']}" if title else citation["url"]
+            formatted += f"[{i}] {citation_text}\n"
         return formatted
 
     def execute(self, prompt, stream, response, conversation, key=None):
@@ -327,7 +326,7 @@ class Perplexity(llm.KeyModel):
                 completed = client.responses.create(**request)
                 yield completed.output_text
         except APIError as e:
-            raise llm.ModelError(f"Perplexity API error: {e.message}")
+            raise llm.ModelError(f"Perplexity API error: {e.message}") from e
 
         if completed is None:
             raise llm.ModelError("Perplexity ended the stream without a final response")
@@ -336,6 +335,7 @@ class Perplexity(llm.KeyModel):
         # so serialising with warnings on prints a pydantic warning per request
         response_data = completed.model_dump(warnings=False)
         response.response_json = remove_dict_none_values(response_data)
+        response._prompt_json = {"input": request["input"]}
 
         failure = failure_message(response_data)
         if failure:
