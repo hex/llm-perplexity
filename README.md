@@ -100,7 +100,7 @@ llm -m sonar-pro --option image_path /path/to/diagram.png 'Explain the process s
 
 `image_path` sends the image as an `input_image` part alongside the prompt text. `llm`'s own `-a` attachment flag is not supported yet. In a conversation, the plugin sends only the current turn's image and does not re-send images from earlier turns.
 
-Note: Only certain Perplexity models support image inputs. The plugin forwards any `image/*` file; PNG, JPEG, and GIF are what Perplexity's models accept, not a plugin restriction.
+Note: Only certain Perplexity models support image inputs. The plugin forwards any `image/*` file; PNG, JPEG, and GIF are what Perplexity's models accept, not a plugin restriction. A file whose extension maps to another type, such as `notes.txt`, is an error. The plugin sends a file with no recognisable extension as `image/png`.
 
 ## Changes in 2026.9.0
 

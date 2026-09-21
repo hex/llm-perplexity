@@ -106,6 +106,17 @@ UNSUPPORTED_OPTION_DEFAULTS = {
 }
 
 
+def unsupported_option_message(name: str) -> str:
+    """Tell the user an option is unsupported and where the change is documented."""
+    message = (
+        f"{name} is not supported by Perplexity's Agent API. "
+        'See "Changes in 2026.9.0" in the llm-perplexity README.'
+    )
+    if name == "use_openrouter":
+        message += " To route through OpenRouter, install the llm-openrouter plugin."
+    return message
+
+
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
         description="The maximum number of output tokens the model may generate.",
@@ -157,14 +168,13 @@ class PerplexityOptions(llm.Options):
     def discard_unsupported_options_left_at_their_default(cls, values):
         if not isinstance(values, dict):
             return values
-        return {
-            name: value
-            for name, value in values.items()
-            if not (
-                name in UNSUPPORTED_OPTION_DEFAULTS
-                and value in (None, UNSUPPORTED_OPTION_DEFAULTS[name])
-            )
-        }
+        supported = {}
+        for name, value in values.items():
+            if name not in UNSUPPORTED_OPTION_DEFAULTS:
+                supported[name] = value
+            elif not (value is None or value is UNSUPPORTED_OPTION_DEFAULTS[name]):
+                raise ValueError(unsupported_option_message(name))
+        return supported
 
     @field_validator("temperature")
     @classmethod
@@ -247,8 +257,10 @@ class Perplexity(llm.KeyModel):
             return prompt.prompt
 
         mime_type, _ = mimetypes.guess_type(image_path)
-        if not mime_type or not mime_type.startswith("image/"):
+        if not mime_type:
             mime_type = "image/png"
+        elif not mime_type.startswith("image/"):
+            raise llm.ModelError(f"Error processing image: {image_path} is {mime_type}, not an image")
 
         try:
             with open(image_path, "rb") as img_file:
@@ -296,13 +308,16 @@ class Perplexity(llm.KeyModel):
 
     @staticmethod
     def format_citations(citations, prefix=CITATIONS_HEADING) -> str:
-        if not citations:
+        citation_texts = [
+            " - ".join(filter(None, (citation.get("title"), citation.get("url"))))
+            for citation in citations or []
+        ]
+        printable = list(filter(None, citation_texts))
+        if not printable:
             return ""
 
         formatted = prefix
-        for i, citation in enumerate(citations, 1):
-            title = citation.get("title")
-            citation_text = f"{title} - {citation['url']}" if title else citation["url"]
+        for i, citation_text in enumerate(printable, 1):
             formatted += f"[{i}] {citation_text}\n"
         return formatted
 
