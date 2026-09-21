@@ -3,7 +3,7 @@
 import llm
 import pytest
 
-from llm_perplexity import integration_header, search_results
+from llm_perplexity import failure_message, integration_header, search_results
 
 
 def test_search_results_come_from_the_search_results_output_item():
@@ -29,6 +29,23 @@ def test_integration_header_names_the_plugin_and_version():
     name, _, version = integration_header().partition("/")
     assert name == "llm-perplexity"
     assert version
+
+
+def test_failure_message_uses_the_error_the_api_reported():
+    data = {"status": "failed", "error": {"code": "server_error", "message": "Model overloaded"}}
+    assert failure_message(data) == "Model overloaded"
+
+
+def test_failure_message_has_a_fallback_when_no_error_is_given():
+    assert (
+        failure_message({"status": "failed", "error": None})
+        == "Perplexity reported that the response failed"
+    )
+
+
+@pytest.mark.parametrize("status", ["completed", "incomplete"])
+def test_failure_message_is_none_for_responses_that_did_not_fail(status):
+    assert failure_message({"status": status, "error": None}) is None
 
 
 @pytest.mark.vcr

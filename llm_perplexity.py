@@ -70,6 +70,14 @@ def search_results(response_data: dict) -> List[dict]:
     ]
 
 
+def failure_message(response_data: dict) -> Optional[str]:
+    """Describe why an Agent API response failed, or None when it did not fail."""
+    if response_data.get("status") != "failed":
+        return None
+    error = response_data.get("error") or {}
+    return error.get("message") or "Perplexity reported that the response failed"
+
+
 @llm.hookimpl
 def register_models(register):
     for model_id in PRESETS:
@@ -295,6 +303,10 @@ class Perplexity(llm.Model):
         # so serialising with warnings on prints a pydantic warning per request
         response_data = completed.model_dump(warnings=False)
         response.response_json = remove_dict_none_values(response_data)
+
+        failure = failure_message(response_data)
+        if failure:
+            raise llm.ModelError(f"Perplexity API error: {failure}")
 
         sources = search_results(response_data)
         if sources and prompt.options.include_citations:
