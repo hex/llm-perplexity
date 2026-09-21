@@ -23,37 +23,17 @@ def register_models(register):
 
 class PerplexityOptions(llm.Options):
     max_tokens: Optional[int] = Field(
-        description="The maximum number of completion tokens returned by the API. The total number of tokens requested in max_tokens plus the number of prompt tokens sent in messages must not exceed the context window token limit of model requested. If left unspecified, then the model will generate tokens until either it reaches its stop token or the end of its context window",
+        description="The maximum number of output tokens the model may generate.",
         default=None,
     )
 
     temperature: Optional[float] = Field(
-        description="The amount of randomness in the response, valued between 0 inclusive and 2 exclusive. Higher values are more random, and lower values are more deterministic",
-        default=1,
+        description="The amount of randomness in the response, valued between 0 inclusive and 2 exclusive. Some underlying models ignore it.",
+        default=None,
     )
 
     top_p: Optional[float] = Field(
-        description="The nucleus sampling threshold, valued between 0 and 1 inclusive. For each subsequent token, the model considers the results of the tokens with 'top_p' probability mass. We recommend either altering 'top_k' or 'top_p', but not both",
-        default=None,
-    )
-
-    top_k: Optional[int] = Field(
-        description="The number of tokens to keep for highest 'top-k' filtering, specified as an integer between 0 and 2048 inclusive. If set to 0, 'top-k' filtering is disabled. We recommend either altering 'top_k' or 'top_p', but not both",
-        default=None,
-    )
-
-    stream: Optional[bool] = Field(
-        description="Determines whether or not to incrementally stream the response with server-sent events with 'content-type: text/event-stream'",
-        default=True,
-    )
-
-    presence_penalty: Optional[float] = Field(
-        description="A value between -2.0 and 2.0. Positive values penalize new tokens based on whether they appear in the text so far, increasing the model's likelihood to talk about new topics. Incompatible with 'frequency_penalty'",
-        default=None,
-    )
-
-    frequency_penalty: Optional[float] = Field(
-        description="A multiplicative penalty greater than 0. Values greater than 1.0 penalize new tokens based on their existing frequency in the text so far, decreasing the model's likelihood to repeat the same line verbatim. A value of 1.0 means no penalty. Incompatible with 'presence_penalty'",
+        description="The nucleus sampling threshold, valued between 0 and 1 inclusive. Some underlying models ignore it.",
         default=None,
     )
 
@@ -63,52 +43,17 @@ class PerplexityOptions(llm.Options):
     )
 
     search_domain_filter: Optional[str] = Field(
-        description="Filter search results by domain. Provide a comma-separated list of domains to include.",
+        description="Comma-separated list of domains to search. Prefix a domain with '-' to exclude it. Up to 20 entries.",
         default=None,
     )
 
-    search_type: Optional[Literal["fast", "pro", "auto"]] = Field(
-        description="Web search type for Sonar Pro. Options include 'fast', 'pro', or 'auto'. 'pro' and 'auto' require streaming to take effect.",
-        default=None,
-    )
-
-    search_mode: Optional[Literal["web", "academic", "sec"]] = Field(
-        description="Type of search sources. 'web' for general web, 'academic' for scholarly sources, 'sec' for SEC filings.",
-        default=None,
-    )
-
-    disable_search: Optional[bool] = Field(
-        description="Explicitly disable web search for this request.",
-        default=None,
-    )
-
-    search_language_filter: Optional[str] = Field(
-        description="Filter search results by language (e.g. 'en', 'fr', 'de').",
+    search_context_size: Optional[Literal["low", "medium", "high"]] = Field(
+        description="How much search context is retrieved for the model: 'low', 'medium' or 'high'.",
         default=None,
     )
 
     reasoning_effort: Optional[Literal["minimal", "low", "medium", "high"]] = Field(
         description="Control the computational effort for reasoning. Options: 'minimal', 'low', 'medium', 'high'.",
-        default=None,
-    )
-
-    return_images: Optional[bool] = Field(
-        description="Whether to include images in the response.",
-        default=None,
-    )
-
-    return_related_questions: Optional[bool] = Field(
-        description="Whether to return related questions in the response.",
-        default=False,
-    )
-
-    language_preference: Optional[str] = Field(
-        description="Preferred output language (e.g. 'en', 'fr', 'de').",
-        default=None,
-    )
-
-    stop: Optional[str] = Field(
-        description="Stop sequence(s) to halt generation.",
         default=None,
     )
 
@@ -125,8 +70,8 @@ class PerplexityOptions(llm.Options):
     @field_validator("temperature")
     @classmethod
     def validate_temperature(cls, temperature):
-        if not (0.0 <= temperature < 2.0):
-            raise ValueError("temperature must be in range 0-2")
+        if temperature is not None and not (0.0 <= temperature < 2.0):
+            raise ValueError("temperature must be at least 0 and below 2")
         return temperature
 
     @field_validator("top_p")
@@ -135,13 +80,6 @@ class PerplexityOptions(llm.Options):
         if top_p is not None and not (0.0 <= top_p <= 1.0):
             raise ValueError("top_p must be in range 0.0-1.0")
         return top_p
-
-    @field_validator("top_k")
-    @classmethod
-    def validate_top_k(cls, top_k):
-        if top_k is not None and (top_k <= 0 or top_k > 2048):
-            raise ValueError("top_k must be in range 0-2048")
-        return top_k
 
     @field_validator("search_recency_filter")
     @classmethod
@@ -157,11 +95,13 @@ class PerplexityOptions(llm.Options):
             domains = [d.strip() for d in domain_filter.split(",")]
             if not all(d and "." in d for d in domains):
                 raise ValueError("search_domain_filter must be a comma-separated list of valid domains")
+            if len(domains) > 20:
+                raise ValueError("search_domain_filter accepts at most 20 domains")
         return domain_filter
 
     @model_validator(mode="after")
     def validate_temperature_top_p(self):
-        if self.temperature != 1.0 and self.top_p is not None:
+        if self.temperature is not None and self.top_p is not None:
             raise ValueError("Only one of temperature and top_p can be set")
         return self
 
@@ -174,10 +114,7 @@ class Perplexity(llm.Model):
     base_url = "https://api.perplexity.ai"
 
     class Options(PerplexityOptions):
-        use_openrouter: Optional[bool] = Field(
-            description="Whether to use OpenRouter API instead of direct Perplexity API",
-            default=False,
-        )
+        pass
 
     def __init__(self, model_id):
         self.model_id = model_id
