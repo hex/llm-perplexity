@@ -107,7 +107,7 @@ UNSUPPORTED_OPTION_DEFAULTS = {
 
 
 def unsupported_option_message(name: str) -> str:
-    """Tell the user an option is unsupported and where the alternatives are listed."""
+    """Tell the user an option is unsupported and where the change is documented."""
     message = (
         f"{name} is not supported by Perplexity's Agent API. "
         'See "Changes in 2026.9.0" in the llm-perplexity README.'
